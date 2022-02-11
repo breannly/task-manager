@@ -1,13 +1,13 @@
 public class Task {
     private String name;
     private String description;
-    private int identifier;
+    private int id;
     private String status;
 
-    public Task(String name, String description, int identifier, String status) {
+    public Task(String name, String description, int id, String status) {
         this.name = name;
         this.description = description;
-        this.identifier = identifier;
+        this.id = id;
         this.status = status;
     }
 }
