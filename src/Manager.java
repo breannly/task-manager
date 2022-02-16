@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 public class Manager {
-    HashMap<Integer,Task> task;
-    HashMap<Integer,Subtask> subtask;
-    HashMap<Integer,Epic> epic;
+    HashMap<Integer,Task> tasks;
+    HashMap<Integer,Subtask> subtasks;
+    HashMap<Integer,Epic> epics;
 }
