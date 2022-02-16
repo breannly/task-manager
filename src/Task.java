@@ -9,4 +9,24 @@ public class Task {
         this.description = description;
         this.status = status;
     }
+    
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
