@@ -12,4 +12,13 @@ public class Subtask extends Task {
     public void setIdEpic(Long idEpic) {
         IdEpic = idEpic;
     }
+
+    @Override
+    public String toString() {
+        return "Subtask{" +
+                "name=" + getName() +
+                ", id=" + getId() +
+                ", status=" + getStatus() +
+                ", id_epic=" + getIdEpic() + "}";
+    }
 }

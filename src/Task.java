@@ -9,7 +9,7 @@ public class Task {
         this.description = description;
         this.status = status;
     }
-    
+
     public String getName() {
         return name;
     }
@@ -28,5 +28,13 @@ public class Task {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "name=" + getName() +
+                ", status=" + getStatus() +
+                ", id=" + getId() + "}";
     }
 }
