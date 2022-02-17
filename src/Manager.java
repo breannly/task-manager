@@ -71,18 +71,19 @@ public class Manager {
         }
     }
 
-    public void deleteEpics() {
-        if (!epics.isEmpty()) {
-            epics.clear();
-        }
-    }
-
     public void deleteSubtasks() {
         for (Epic epic : epics.values()) {
             epic.setStatus(StatusType.NEW.toString());
         }
         if (!subtasks.isEmpty()) {
             subtasks.clear();
+        }
+    }
+
+    public void deleteEpics() {
+        deleteSubtasks();
+        if (!epics.isEmpty()) {
+            epics.clear();
         }
     }
 
