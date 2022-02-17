@@ -14,7 +14,7 @@ public class Epic extends Task {
                 "name= " + getName() +
                 ", id=" + getId() +
                 ", status=" + getStatus() +
-                "subtasks=" + subtasks.values() + "}";
+                ", subtasks=" + subtasks.values() + "}";
     }
 
     public HashMap<Long, Subtask> getSubtask() {
