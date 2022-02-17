@@ -143,6 +143,7 @@ public class Manager {
 
     public Epic createEpic(Epic epic) {
         epic.setId(getId());
+        checkStatus(epic);
         tasks.put(id, epic);
 
         return epic;
