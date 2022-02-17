@@ -16,4 +16,8 @@ public class Epic extends Task {
                 ", status=" + getStatus() +
                 "subtasks=" + subtasks.values() + "}";
     }
+
+    public HashMap<Integer, Subtask> getSubtask() {
+        return subtasks;
+    }
 }
