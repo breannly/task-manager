@@ -89,4 +89,16 @@ public class Manager {
         }
         return null;
     }
+
+    public void updateTask(Task task) {
+        tasks.put(task.getId(), task);
+    }
+
+    public void updateEpic(Epic epic) {
+        epics.put(epic.getId(), epic);
+    }
+
+    public void updateSubtask(Subtask subtask) {
+        subtasks.put(subtask.getId(), subtask);
+    }
 }
