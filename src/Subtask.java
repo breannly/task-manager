@@ -3,8 +3,9 @@ import java.util.Objects;
 public class Subtask extends Task {
     private Long IdEpic;
 
-    public Subtask(String name, String description, String status) {
+    public Subtask(String name, String description, String status, Long IdEpic) {
         super(name, description, status);
+        this.IdEpic = IdEpic;
     }
 
     public Long getIdEpic() {
