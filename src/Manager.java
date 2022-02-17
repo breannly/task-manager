@@ -20,4 +20,16 @@ public class Manager {
         id++;
         return id;
     }
+
+    public Object getTasks() {
+        return tasks.values();
+    }
+
+    public Object getSubtasks() {
+        return subtasks.values();
+    }
+
+    public Object getEpics() {
+        return epics.values();
+    }
 }
