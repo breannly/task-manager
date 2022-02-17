@@ -101,4 +101,25 @@ public class Manager {
     public void updateSubtask(Subtask subtask) {
         subtasks.put(subtask.getId(), subtask);
     }
+
+    public Task createTask(Task task) {
+        task.setId(getId());
+        tasks.put(id, task);
+
+        return task;
+    }
+
+    public Epic createEpic(Epic epic) {
+        epic.setId(getId());
+        tasks.put(id, epic);
+
+        return epic;
+    }
+
+    public Subtask createSubtask(Subtask subtask) {
+        subtask.setId(getId());
+        subtasks.put(id, subtask);
+
+        return subtask;
+    }
 }
