@@ -2,9 +2,9 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class Manager {
-    private HashMap<Integer, Task> tasks;
-    private HashMap<Integer, Subtask> subtasks;
-    private HashMap<Integer, Epic> epics;
+    private HashMap<Long, Task> tasks;
+    private HashMap<Long, Subtask> subtasks;
+    private HashMap<Long, Epic> epics;
     private Long id;
 
     Scanner scanner;
@@ -52,5 +52,41 @@ public class Manager {
         if (!subtasks.isEmpty()) {
             subtasks.clear();
         }
+    }
+
+    public Task getTaskById(Long id) {
+        if (tasks.isEmpty()) {
+            return null;
+        }
+        for (Long ID : epics.keySet()) {
+            if (ID == id) {
+                return epics.get(id);
+            }
+        }
+        return null;
+    }
+
+    public Epic getEpicById(Long id) {
+        if (epics.isEmpty()) {
+            return null;
+        }
+        for (Long ID : epics.keySet()) {
+            if (ID == id) {
+                return epics.get(id);
+            }
+        }
+        return null;
+    }
+
+    public Subtask getSubtaskById(Long id) {
+        if (subtasks.isEmpty()) {
+            return null;
+        }
+        for (Long ID : subtasks.keySet()) {
+            if (ID == id) {
+                return subtasks.get(id);
+            }
+        }
+        return null;
     }
 }
