@@ -152,6 +152,8 @@ public class Manager {
     public Subtask createSubtask(Subtask subtask) {
         subtask.setId(getId());
         subtasks.put(id, subtask);
+        Epic epic = epics.get(subtask.getIdEpic());
+        epic.addSubtask(subtask);
 
         return subtask;
     }
@@ -163,5 +165,5 @@ public class Manager {
     public void deleteEpicById(Long id) {
         epics.remove(id);
     }
-    
+
 }
