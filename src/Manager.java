@@ -47,7 +47,7 @@ public class Manager {
 
     public void deleteSubtasks() {
         for (Epic epic : epics.values()) {
-            epic.setStatus("NEW");
+            epic.setStatus(StatusType.NEW.toString());
         }
         if (!subtasks.isEmpty()) {
             subtasks.clear();
