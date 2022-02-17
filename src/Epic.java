@@ -1,11 +1,11 @@
 import java.util.HashMap;
 
 public class Epic extends Task {
-    private HashMap<Integer, Subtask> subtasks;
+    private HashMap<Long, Subtask> subtasks;
 
     public Epic(String name, String description) {
-        super (name, description);
-
+        super(name, description);
+        subtasks = new HashMap<>();
     }
 
     @Override
@@ -17,7 +17,11 @@ public class Epic extends Task {
                 "subtasks=" + subtasks.values() + "}";
     }
 
-    public HashMap<Integer, Subtask> getSubtask() {
+    public HashMap<Long, Subtask> getSubtask() {
         return subtasks;
+    }
+
+    public void addSubtask(Subtask subtask) {
+        subtasks.put(subtask.getId(), subtask);
     }
 }
