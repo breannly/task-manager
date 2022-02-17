@@ -15,4 +15,9 @@ public class Manager {
         subtasks = new HashMap<>();
         epics = new HashMap<>();
     }
+
+    private Long getId() {
+        id++;
+        return id;
+    }
 }
