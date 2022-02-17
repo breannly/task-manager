@@ -21,6 +21,38 @@ public class Manager {
         return id;
     }
 
+    private void checkStatus(Epic epic) {
+        int countNew = 0;
+        int countDone = 0;
+        int lengthSubtasks = epic.getSubtask().size();
+
+        if (epic.getSubtask().isEmpty()) {
+            epic.setStatus(StatusType.NEW.toString());
+            return;
+        }
+
+        for (Subtask subtask : epic.getSubtask().values()) {
+            String status = subtask.getStatus();
+            if (status.equals(StatusType.NEW.toString())) {
+                countNew++;
+            }
+            if (status.equals(StatusType.DONE.toString())) {
+                countDone++;
+            }
+        }
+
+        if (countNew == lengthSubtasks) {
+            epic.setStatus(StatusType.NEW.toString());
+            return;
+        }
+        if (countDone == lengthSubtasks) {
+            epic.setStatus(StatusType.DONE.toString());
+            return;
+        }
+
+        epic.setStatus(StatusType.IN_PROGRESS.toString());
+    }
+
     public Object getTasks() {
         return tasks.values();
     }
