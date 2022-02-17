@@ -32,4 +32,25 @@ public class Manager {
     public Object getEpics() {
         return epics.values();
     }
+
+    public void deleteTasks() {
+        if (!tasks.isEmpty()) {
+            tasks.clear();
+        }
+    }
+
+    public void deleteEpics() {
+        if (!epics.isEmpty()) {
+            epics.clear();
+        }
+    }
+
+    public void deleteSubtasks() {
+        for (Epic epic : epics.values()) {
+            epic.setStatus("NEW");
+        }
+        if (!subtasks.isEmpty()) {
+            subtasks.clear();
+        }
+    }
 }
