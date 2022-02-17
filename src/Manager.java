@@ -31,7 +31,7 @@ public class Manager {
             return;
         }
 
-        for (Subtask subtask : epic.getSubtask().values()) {
+        for (Subtask subtask : epic.getSubtask().values()){
             String status = subtask.getStatus();
             if (status.equals(StatusType.NEW.toString())) {
                 countNew++;
@@ -133,6 +133,7 @@ public class Manager {
 
     public void updateSubtask(Subtask subtask) {
         subtasks.put(subtask.getId(), subtask);
+        checkStatus(getEpicById(subtask.getIdEpic()));
     }
 
     public Task createTask(Task task) {
@@ -144,7 +145,8 @@ public class Manager {
 
     public Epic createEpic(Epic epic) {
         epic.setId(getId());
-        tasks.put(id, epic);
+        checkStatus(epic);
+        epics.put(id, epic);
 
         return epic;
     }
