@@ -166,6 +166,10 @@ public class Manager {
     }
 
     public void deleteEpicById(Long id) {
+        Epic epic = getEpicById(id);
+        for (Subtask subtask: epic.getSubtask().values()) {
+            subtasks.remove(subtask.getId());
+        }
         epics.remove(id);
     }
 
