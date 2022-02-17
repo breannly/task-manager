@@ -128,6 +128,7 @@ public class Manager {
 
     public void updateEpic(Epic epic) {
         epics.put(epic.getId(), epic);
+        checkStatus(epic);
     }
 
     public void updateSubtask(Subtask subtask) {
@@ -143,7 +144,6 @@ public class Manager {
 
     public Epic createEpic(Epic epic) {
         epic.setId(getId());
-        checkStatus(epic);
         tasks.put(id, epic);
 
         return epic;
@@ -155,4 +155,13 @@ public class Manager {
 
         return subtask;
     }
+
+    public void deleteTaskById(Long id) {
+        tasks.remove(id);
+    }
+
+    public void deleteEpicById(Long id) {
+        epics.remove(id);
+    }
+    
 }
