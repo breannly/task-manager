@@ -179,7 +179,7 @@ public class Manager {
     public void deleteSubtaskById(Long id) {
         Subtask subtask = getSubtaskById(id);
         Epic epic = getEpicById(subtask.getIdEpic());
+        checkStatus(epic);
         epic.getSubtask().remove(id);
-        epics.remove(id);
     }
 }
