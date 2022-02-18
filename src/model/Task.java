@@ -43,7 +43,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "model.Task{" +
+        return "Task{" +
                 "name=" + getName() +
                 ", status=" + getStatus() +
                 ", id=" + getId() + "}";
