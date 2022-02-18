@@ -1,14 +1,11 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class Manager {
     private HashMap<Long, Task> tasks;
     private HashMap<Long, Subtask> subtasks;
     private HashMap<Long, Epic> epics;
     private Long id;
-
-    Scanner scanner;
 
     public Manager() {
         id = 0L;
