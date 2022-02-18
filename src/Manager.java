@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -53,16 +54,19 @@ public class Manager {
         epic.setStatus(StatusType.IN_PROGRESS.toString());
     }
 
-    public Object getTasks() {
-        return tasks.values();
+    public ArrayList<Task> getTasks() {
+        ArrayList<Task> tasks = new ArrayList<>(this.tasks.values());
+        return tasks;
     }
 
-    public Object getSubtasks() {
-        return subtasks.values();
+    public ArrayList<Subtask> getSubtasks() {
+        ArrayList<Subtask> subtasks = new ArrayList<>(this.subtasks.values());
+        return subtasks;
     }
 
-    public Object getEpics() {
-        return epics.values();
+    public ArrayList<Epic> getEpics() {
+        ArrayList<Epic> epics = new ArrayList<>(this.epics.values());
+        return epics;
     }
 
     public void deleteTasks() {
