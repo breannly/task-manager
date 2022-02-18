@@ -133,7 +133,6 @@ public class Manager {
 
     public void updateEpic(Epic epic) {
         epics.put(epic.getId(), epic);
-        checkStatus(epic);
     }
 
     public void updateSubtask(Subtask subtask) {
