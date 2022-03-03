@@ -7,13 +7,13 @@ import model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Manager {
+public class InMemoryTaskManager implements TaskManager {
     private HashMap<Long, Task> tasks;
     private HashMap<Long, Subtask> subtasks;
     private HashMap<Long, Epic> epics;
     private Long id;
 
-    public Manager() {
+    public InMemoryTaskManager() {
         id = 0L;
         tasks = new HashMap<>();
         subtasks = new HashMap<>();
@@ -57,27 +57,32 @@ public class Manager {
         epic.setStatus(StatusType.IN_PROGRESS.toString());
     }
 
+    @Override
     public ArrayList<Task> getTasks() {
         ArrayList<Task> tasks = new ArrayList<>(this.tasks.values());
         return tasks;
     }
 
+    @Override
     public ArrayList<Subtask> getSubtasks() {
         ArrayList<Subtask> subtasks = new ArrayList<>(this.subtasks.values());
         return subtasks;
     }
 
+    @Override
     public ArrayList<Epic> getEpics() {
         ArrayList<Epic> epics = new ArrayList<>(this.epics.values());
         return epics;
     }
 
+    @Override
     public void deleteTasks() {
         if (!tasks.isEmpty()) {
             tasks.clear();
         }
     }
 
+    @Override
     public void deleteSubtasks() {
         for (Epic epic : epics.values()) {
             epic.setStatus(StatusType.NEW.toString());
@@ -87,6 +92,7 @@ public class Manager {
         }
     }
 
+    @Override
     public void deleteEpics() {
         deleteSubtasks();
         if (!epics.isEmpty()) {
@@ -94,6 +100,7 @@ public class Manager {
         }
     }
 
+    @Override
     public Task getTaskById(Long id) {
         if (tasks.isEmpty()) {
             return null;
@@ -106,6 +113,7 @@ public class Manager {
         return null;
     }
 
+    @Override
     public Epic getEpicById(Long id) {
         if (epics.isEmpty()) {
             return null;
@@ -118,6 +126,7 @@ public class Manager {
         return null;
     }
 
+    @Override
     public Subtask getSubtaskById(Long id) {
         if (subtasks.isEmpty()) {
             return null;
@@ -130,19 +139,23 @@ public class Manager {
         return null;
     }
 
+    @Override
     public void updateTask(Task task) {
         tasks.put(task.getId(), task);
     }
 
+    @Override
     public void updateEpic(Epic epic) {
         epics.put(epic.getId(), epic);
     }
 
+    @Override
     public void updateSubtask(Subtask subtask) {
         subtasks.put(subtask.getId(), subtask);
         checkStatus(getEpicById(subtask.getIdEpic()));
     }
 
+    @Override
     public Task createTask(Task task) {
         task.setId(getId());
         tasks.put(id, task);
@@ -150,6 +163,7 @@ public class Manager {
         return task;
     }
 
+    @Override
     public Epic createEpic(Epic epic) {
         epic.setId(getId());
         checkStatus(epic);
@@ -158,6 +172,7 @@ public class Manager {
         return epic;
     }
 
+    @Override
     public Subtask createSubtask(Subtask subtask) {
         subtask.setId(getId());
         subtasks.put(id, subtask);
@@ -167,10 +182,12 @@ public class Manager {
         return subtask;
     }
 
+    @Override
     public void deleteTaskById(Long id) {
         tasks.remove(id);
     }
 
+    @Override
     public void deleteEpicById(Long id) {
         Epic epic = getEpicById(id);
         for (Subtask subtask: epic.getSubtask().values()) {
@@ -179,6 +196,7 @@ public class Manager {
         epics.remove(id);
     }
 
+    @Override
     public void deleteSubtaskById(Long id) {
         Subtask subtask = getSubtaskById(id);
         Epic epic = getEpicById(subtask.getIdEpic());
