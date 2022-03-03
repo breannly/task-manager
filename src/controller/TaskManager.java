@@ -6,7 +6,7 @@ import model.Task;
 
 import java.util.List;
 
-interface TaskManager {
+public interface TaskManager {
 
     public List<Task> getTasks();
 
