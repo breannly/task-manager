@@ -6,11 +6,13 @@ import model.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private HashMap<Long, Task> tasks;
-    private HashMap<Long, Subtask> subtasks;
-    private HashMap<Long, Epic> epics;
+    private Map<Long, Task> tasks;
+    private Map<Long, Subtask> subtasks;
+    private Map<Long, Epic> epics;
     private Long id;
 
     public InMemoryTaskManager() {
@@ -58,20 +60,20 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getTasks() {
-        ArrayList<Task> tasks = new ArrayList<>(this.tasks.values());
+    public List<Task> getTasks() {
+        List<Task> tasks = new ArrayList<>(this.tasks.values());
         return tasks;
     }
 
     @Override
-    public ArrayList<Subtask> getSubtasks() {
-        ArrayList<Subtask> subtasks = new ArrayList<>(this.subtasks.values());
+    public List<Subtask> getSubtasks() {
+        List<Subtask> subtasks = new ArrayList<>(this.subtasks.values());
         return subtasks;
     }
 
     @Override
-    public ArrayList<Epic> getEpics() {
-        ArrayList<Epic> epics = new ArrayList<>(this.epics.values());
+    public List<Epic> getEpics() {
+        List<Epic> epics = new ArrayList<>(this.epics.values());
         return epics;
     }
 
