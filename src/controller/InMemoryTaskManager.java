@@ -13,6 +13,7 @@ public class InMemoryTaskManager implements TaskManager {
     private Map<Long, Task> tasks;
     private Map<Long, Subtask> subtasks;
     private Map<Long, Epic> epics;
+    private List<Task> history;
     private Long id;
 
     public InMemoryTaskManager() {
@@ -20,6 +21,7 @@ public class InMemoryTaskManager implements TaskManager {
         tasks = new HashMap<>();
         subtasks = new HashMap<>();
         epics = new HashMap<>();
+        history = new ArrayList<>();
     }
 
     private Long getId() {
@@ -57,6 +59,28 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         epic.setStatus(StatusType.IN_PROGRESS.toString());
+    }
+
+    private void getHistory() {
+        System.out.println(history);
+    }
+
+    private boolean isFullHistory() {
+        if (history.size() == 10) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void addHistory(Task task) {
+        if (isFullHistory()) {
+            history.remove(0);
+            history.add(task);
+            return;
+        }
+
+        history.add(task);
     }
 
     @Override
@@ -107,9 +131,10 @@ public class InMemoryTaskManager implements TaskManager {
         if (tasks.isEmpty()) {
             return null;
         }
-        for (Long ID : epics.keySet()) {
+        for (Long ID : tasks.keySet()) {
             if (ID == id) {
-                return epics.get(id);
+                addHistory(tasks.get(id));
+                return tasks.get(id);
             }
         }
         return null;
@@ -122,6 +147,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         for (Long ID : epics.keySet()) {
             if (ID == id) {
+                addHistory(epics.get(id));
                 return epics.get(id);
             }
         }
@@ -135,6 +161,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
         for (Long ID : subtasks.keySet()) {
             if (ID == id) {
+                addHistory(subtasks.get(id));
                 return subtasks.get(id);
             }
         }
