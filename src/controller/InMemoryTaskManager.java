@@ -212,4 +212,8 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> history() {
         return historyManager.getHistory();
     }
+
+    //нужно ли сейчас поделить пакет controller на пакеты? например, интерфейсы в одну, а мэнеджеры в другую?
+    // есть ли какое-то правило по названиям общепринятые (как комиты)? или тут уже по наблюдениям? смотреть лайвкодинг и
+    // пробовать что-то копировать и т.п.?
 }
