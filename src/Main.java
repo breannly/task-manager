@@ -5,9 +5,7 @@ import model.Task;
 
 public class Main {
     public static void main(String[] args) {
-        TaskManager taskManager = Managers.getDefault();
-        InMemoryTaskManager inMemoryTaskManager = (InMemoryTaskManager) taskManager;
-        HistoryManager historyManager = inMemoryTaskManager.getHistoryManager();
+        final TaskManager taskManager = Managers.getDefault();
 
         Task task1 = new Task("Уборка", "10 минут", "NEW");
         taskManager.createTask(task1);
@@ -27,16 +25,16 @@ public class Main {
         taskManager.getTaskById(2L);
         taskManager.getTaskById(1L);
         taskManager.getTaskById(2L);
-        System.out.println(historyManager.getHistory());
+        System.out.println(taskManager.history());
         taskManager.getEpicById(3L);
         taskManager.getTaskById(1L);
         taskManager.getTaskById(2L);
-        System.out.println(historyManager.getHistory());
+        System.out.println(taskManager.history());
         taskManager.getSubtaskById(7L);
         taskManager.getTaskById(2L);
         taskManager.getTaskById(1L);
         taskManager.getTaskById(2L);
         taskManager.getTaskById(1L);
-        System.out.println(historyManager.getHistory());
+        System.out.println(taskManager.history());
     }
 }

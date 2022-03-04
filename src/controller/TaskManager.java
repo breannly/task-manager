@@ -43,4 +43,6 @@ public interface TaskManager {
     public void deleteEpicById(Long id);
 
     public void deleteSubtaskById(Long id);
+
+    public List<Task> history();
 }

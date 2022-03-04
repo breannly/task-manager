@@ -106,13 +106,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(Long id) {
-        if (tasks.isEmpty()) {
-            return null;
-        }
-        for (Long ID : tasks.keySet()) {
-            if (ID == id) {
-                historyManager.add(tasks.get(id));
-                return tasks.get(id);
+        if (!tasks.isEmpty()) {
+            for (Long ID : tasks.keySet()) {
+                if (ID == id) {
+                    historyManager.add(tasks.get(id));
+                    return tasks.get(id);
+                }
             }
         }
         return null;
@@ -120,13 +119,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic getEpicById(Long id) {
-        if (epics.isEmpty()) {
-            return null;
-        }
-        for (Long ID : epics.keySet()) {
-            if (ID == id) {
-                historyManager.add(epics.get(id));
-                return epics.get(id);
+        if (!epics.isEmpty()) {
+            for (Long ID : epics.keySet()) {
+                if (ID == id) {
+                    historyManager.add(epics.get(id));
+                    return epics.get(id);
+                }
             }
         }
         return null;
@@ -134,13 +132,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask getSubtaskById(Long id) {
-        if (subtasks.isEmpty()) {
-            return null;
-        }
-        for (Long ID : subtasks.keySet()) {
-            if (ID == id) {
-                historyManager.add(subtasks.get(id));
-                return subtasks.get(id);
+        if (!subtasks.isEmpty()) {
+            for (Long ID : subtasks.keySet()) {
+                if (ID == id) {
+                    historyManager.add(subtasks.get(id));
+                    return subtasks.get(id);
+                }
             }
         }
         return null;
@@ -211,7 +208,8 @@ public class InMemoryTaskManager implements TaskManager {
         epic.getSubtask().remove(id);
     }
 
-    public HistoryManager getHistoryManager() {
-        return historyManager;
+    @Override
+    public List<Task> history() {
+        return historyManager.getHistory();
     }
 }
