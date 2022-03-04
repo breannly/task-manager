@@ -1,5 +1,9 @@
-package controller;
+package controller.manager;
 
+import controller.imanager.HistoryManager;
+import controller.imanager.TaskManager;
+import controller.StatusType;
+import controller.utility.Managers;
 import model.Epic;
 import model.Subtask;
 import model.Task;

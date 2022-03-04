@@ -1,4 +1,9 @@
-package controller;
+package controller.utility;
+
+import controller.imanager.HistoryManager;
+import controller.manager.InMemoryHistoryManager;
+import controller.manager.InMemoryTaskManager;
+import controller.imanager.TaskManager;
 
 public class Managers {
 

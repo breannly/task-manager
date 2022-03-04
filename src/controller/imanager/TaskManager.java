@@ -1,4 +1,4 @@
-package controller;
+package controller.imanager;
 
 import model.Epic;
 import model.Subtask;

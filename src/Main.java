@@ -1,5 +1,5 @@
-import controller.Managers;
-import controller.TaskManager;
+import controller.utility.Managers;
+import controller.imanager.TaskManager;
 import model.Epic;
 import model.Subtask;
 import model.Task;
