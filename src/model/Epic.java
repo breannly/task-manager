@@ -3,7 +3,7 @@ package model;
 import java.util.HashMap;
 
 public class Epic extends Task {
-    private HashMap<Long, Subtask> subtasks;
+    private final HashMap<Long, Subtask> subtasks;
 
     public Epic(String name, String description) {
         super(name, description);
