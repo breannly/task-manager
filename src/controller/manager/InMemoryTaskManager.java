@@ -43,26 +43,22 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        for (Subtask subtask : epic.getSubtask().values()){
+        for (Subtask subtask : epic.getSubtask().values()) {
             String status = subtask.getStatus();
             if (status.equals(StatusType.NEW.toString())) {
                 countNew++;
-            }
-            if (status.equals(StatusType.DONE.toString())) {
+            } else if (status.equals(StatusType.DONE.toString())) {
                 countDone++;
             }
         }
 
         if (countNew == lengthSubtasks) {
             epic.setStatus(StatusType.NEW.toString());
-            return;
-        }
-        if (countDone == lengthSubtasks) {
+        } else if (countDone == lengthSubtasks) {
             epic.setStatus(StatusType.DONE.toString());
-            return;
+        } else {
+            epic.setStatus(StatusType.IN_PROGRESS.toString());
         }
-
-        epic.setStatus(StatusType.IN_PROGRESS.toString());
     }
 
     @Override
@@ -198,7 +194,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteEpicById(Long id) {
         Epic epic = getEpicById(id);
-        for (Subtask subtask: epic.getSubtask().values()) {
+        for (Subtask subtask : epic.getSubtask().values()) {
             subtasks.remove(subtask.getId());
         }
         epics.remove(id);
