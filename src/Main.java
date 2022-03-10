@@ -26,16 +26,16 @@ public class Main {
         taskManager.getTaskById(2L);
         taskManager.getTaskById(1L);
         taskManager.getTaskById(2L);
-        System.out.println(taskManager.history());
+        System.out.println(taskManager.getHistory());
         taskManager.getEpicById(3L);
         taskManager.getTaskById(1L);
         taskManager.getTaskById(2L);
-        System.out.println(taskManager.history());
+        System.out.println(taskManager.getHistory());
         taskManager.getSubtaskById(7L);
         taskManager.getTaskById(2L);
         taskManager.getTaskById(1L);
         taskManager.getTaskById(2L);
         taskManager.getTaskById(1L);
-        System.out.println(taskManager.history());
+        System.out.println(taskManager.getHistory());
     }
 }

@@ -44,5 +44,5 @@ public interface TaskManager {
 
     public void deleteSubtaskById(Long id);
 
-    public List<Task> history();
+    public List<Task> getHistory();
 }
