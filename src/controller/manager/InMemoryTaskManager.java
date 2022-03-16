@@ -54,11 +54,15 @@ public class InMemoryTaskManager implements TaskManager {
 
         if (countNew == lengthSubtasks) {
             epic.setStatus(StatusType.NEW.toString());
-        } else if (countDone == lengthSubtasks) {
-            epic.setStatus(StatusType.DONE.toString());
-        } else {
-            epic.setStatus(StatusType.IN_PROGRESS.toString());
+            return;
         }
+
+        if (countDone == lengthSubtasks) {
+            epic.setStatus(StatusType.DONE.toString());
+            return;
+        }
+
+        epic.setStatus(StatusType.IN_PROGRESS.toString());
     }
 
     @Override
