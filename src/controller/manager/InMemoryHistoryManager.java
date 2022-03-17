@@ -35,4 +35,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
         return false;
     }
+
+    @Override
+    public void remove(Long id) {
+
+    }
 }
