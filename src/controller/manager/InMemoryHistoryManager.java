@@ -1,45 +1,92 @@
 package controller.manager;
 
 import controller.imanager.HistoryManager;
+import model.HistoryNode;
 import model.Task;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final List<Task> history;
-    private static final int HISTORY_SIZE = 10;
+    private final HistoryLinkedList<Task> historyList;
+    private final Map<Long, HistoryNode<Task>> historyMap;
 
     public InMemoryHistoryManager() {
-        history = new LinkedList<>();
-    }
-
-    private boolean isFullHistory() {
-        if (history.size() == HISTORY_SIZE) {
-            return true;
-        }
-
-        return false;
+        historyList = new HistoryLinkedList<>();
+        historyMap = new HashMap<>();
     }
 
     @Override
     public List<Task> getHistory() {
-        return history;
+        return historyList.getTasks();
     }
 
     @Override
     public void add(Task task) {
-        if (isFullHistory()) {
-            history.remove(0);
+        if (historyMap.containsKey(task.getId())) {
+            remove(task.getId());
         }
 
-        history.add(task);
+        historyMap.put(task.getId(), historyList.linkLast(task));
     }
 
     @Override
     public void remove(Long id) {
-
+        HistoryNode<Task> node = historyMap.get(id);
+        historyList.removeNode(node);
     }
 
+    class HistoryLinkedList<T> {
+        private HistoryNode<T> head;
+        private HistoryNode<T> tail;
+
+        public HistoryLinkedList() {
+            head = null;
+            tail = null;
+        }
+
+        private HistoryNode<T> linkLast(T t) {
+            HistoryNode<T> newNode = new HistoryNode<>(t);
+
+            if (head == null) {
+                head = newNode;
+            } else {
+                tail.next = newNode;
+                newNode.prev = tail;
+            }
+
+            tail = newNode;
+
+            return newNode;
+        }
+
+        private List<T> getTasks() {
+            List<T> task = new ArrayList<T>();
+            HistoryNode<T> node = head;
+
+            while(node != null) {
+                task.add(node.data);
+                node = node.next;
+            }
+
+            return task;
+        }
+
+        private void removeNode(HistoryNode<T> node) {
+            HistoryNode<T> prevNode = node.prev;
+            HistoryNode<T> nextNode = node.next;
+
+            if (prevNode != null) {
+                node.prev.next = nextNode;
+            } else {
+                head = node.next;
+            }
+
+            if (nextNode != null) {
+                node.next.prev = prevNode;
+            } else {
+                tail = node.prev;
+            }
+        }
+    }
 
 }
