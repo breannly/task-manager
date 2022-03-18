@@ -14,8 +14,6 @@ public class Epic extends Task {
     public String toString() {
         return "Epic{" +
                 "name= " + getName() +
-                ", id=" + getId() +
-                ", status=" + getStatus() +
                 ", subtasks=" + subtasks.values() + "}";
     }
 

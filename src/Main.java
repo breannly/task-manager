@@ -32,9 +32,10 @@ public class Main {
         System.out.println(taskManager.getHistory());
         taskManager.getTaskById(2L);
         System.out.println(taskManager.getHistory());
-        taskManager.getEpicById(3L);
+        taskManager.getEpicById(4L);
         System.out.println(taskManager.getHistory());
         taskManager.getSubtaskById(5L);
+        taskManager.deleteEpicById(4L);
         System.out.println(taskManager.getHistory());
         taskManager.getEpicById(3L);
 
