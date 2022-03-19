@@ -31,8 +31,10 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(Long id) {
-        HistoryNode<Task> node = historyMap.get(id);
-        historyList.removeNode(node);
+        if (historyMap.containsKey(id)) {
+            HistoryNode<Task> node = historyMap.get(id);
+            historyList.removeNode(node);
+        }
     }
 
     class HistoryLinkedList<T> {
@@ -63,7 +65,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             List<T> task = new ArrayList<T>();
             HistoryNode<T> node = head;
 
-            while(node != null) {
+            while (node != tail.next) {
                 task.add(node.data);
                 node = node.next;
             }
