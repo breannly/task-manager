@@ -65,6 +65,12 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setStatus(StatusType.IN_PROGRESS.toString());
     }
 
+    private void removeTasksFromHistory(Map<Long, ? extends Task> taskList) {
+        for (Task task : taskList.values()) {
+            historyManager.remove(task.getId());
+        }
+    }
+
     @Override
     public List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>(this.tasks.values());
@@ -85,6 +91,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTasks() {
+        removeTasksFromHistory(tasks);
+
         if (!tasks.isEmpty()) {
             tasks.clear();
         }
@@ -92,6 +100,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteSubtasks() {
+        removeTasksFromHistory(subtasks);
         for (Epic epic : epics.values()) {
             epic.setStatus(StatusType.NEW.toString());
         }
@@ -102,6 +111,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpics() {
+        removeTasksFromHistory(epics);
         deleteSubtasks();
         if (!epics.isEmpty()) {
             epics.clear();
