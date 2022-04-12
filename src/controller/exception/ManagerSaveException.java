@@ -1,2 +1,4 @@
-package controller.exception;public class ManagerSaveException {
+package controller.exception;
+
+public class ManagerSaveException extends Exception{
 }
