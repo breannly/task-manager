@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface TaskManager {
 
-    public List<Task> getTasks();
+    public List<Task> getTasksList();
 
-    public List<Subtask> getSubtasks();
+    public List<Subtask> getSubtasksList();
 
-    public List<Epic> getEpics();
+    public List<Epic> getEpicsList();
 
     public void deleteTasks();
 

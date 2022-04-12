@@ -1,27 +1,34 @@
 package controller.manager;
 
+import controller.exception.ManagerSaveException;
 import controller.imanager.TaskManager;
 import model.entity.Epic;
 import model.entity.Subtask;
 import model.entity.Task;
 
+import java.io.*;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+    private final File file;
 
-    @Override
-    public List<Task> getTasks() {
-        return super.getTasks();
+    public FileBackedTaskManager(File file) {
+        this.file = file;
     }
 
     @Override
-    public List<Subtask> getSubtasks() {
-        return super.getSubtasks();
+    public List<Task> getTasksList() {
+        return super.getTasksList();
     }
 
     @Override
-    public List<Epic> getEpics() {
-        return super.getEpics();
+    public List<Subtask> getSubtasksList() {
+        return super.getSubtasksList();
+    }
+
+    @Override
+    public List<Epic> getEpicsList() {
+        return super.getEpicsList();
     }
 
     @Override
