@@ -1,5 +1,6 @@
 package controller.imanager;
 
+import controller.exception.ManagerSaveException;
 import model.entity.Epic;
 import model.entity.Subtask;
 import model.entity.Task;
@@ -14,35 +15,35 @@ public interface TaskManager {
 
     public List<Epic> getEpicsList();
 
-    public void deleteTasks();
+    public void deleteTasks() throws ManagerSaveException;
 
-    public void deleteSubtasks();
+    public void deleteSubtasks() throws ManagerSaveException;
 
-    public void deleteEpics();
+    public void deleteEpics() throws ManagerSaveException;
 
-    public Task getTaskById(Long id);
+    public Task getTaskById(Long id) throws ManagerSaveException;
 
-    public Epic getEpicById(Long id);
+    public Epic getEpicById(Long id) throws ManagerSaveException;
 
-    public Subtask getSubtaskById(Long id);
+    public Subtask getSubtaskById(Long id) throws ManagerSaveException;
 
-    public void updateTask(Task task);
+    public void updateTask(Task task) throws ManagerSaveException;
 
-    public void updateEpic(Epic epic);
+    public void updateEpic(Epic epic) throws ManagerSaveException;
 
-    public void updateSubtask(Subtask subtask);
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException;
 
-    public Task addTask(Task task);
+    public Task addTask(Task task) throws ManagerSaveException;
 
-    public Epic addEpic(Epic epic);
+    public Epic addEpic(Epic epic) throws ManagerSaveException;
 
-    public Subtask addSubtask(Subtask subtask);
+    public Subtask addSubtask(Subtask subtask) throws ManagerSaveException;
 
-    public void deleteTaskById(Long id);
+    public void deleteTaskById(Long id) throws ManagerSaveException;
 
-    public void deleteEpicById(Long id);
+    public void deleteEpicById(Long id) throws ManagerSaveException;
 
-    public void deleteSubtaskById(Long id);
+    public void deleteSubtaskById(Long id) throws ManagerSaveException;
 
     public List<Task> getHistory();
 }
