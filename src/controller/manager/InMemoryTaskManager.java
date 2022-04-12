@@ -169,7 +169,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task createTask(Task task) {
+    public Task addTask(Task task) {
         task.setId(idGenerator.generateID());
         tasks.put(idGenerator.getId(), task);
 
@@ -177,7 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic createEpic(Epic epic) {
+    public Epic addEpic(Epic epic) {
         epic.setId(idGenerator.generateID());
         checkStatus(epic);
         epics.put(idGenerator.getId(), epic);
@@ -186,7 +186,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask createSubtask(Subtask subtask) {
+    public Subtask addSubtask(Subtask subtask) {
         subtask.setId(idGenerator.generateID());
         subtasks.put(idGenerator.getId(), subtask);
         Epic epic = epics.get(subtask.getIdEpic());

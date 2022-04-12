@@ -32,11 +32,11 @@ public interface TaskManager {
 
     public void updateSubtask(Subtask subtask);
 
-    public Task createTask(Task task);
+    public Task addTask(Task task);
 
-    public Epic createEpic(Epic epic);
+    public Epic addEpic(Epic epic);
 
-    public Subtask createSubtask(Subtask subtask);
+    public Subtask addSubtask(Subtask subtask);
 
     public void deleteTaskById(Long id);
 
