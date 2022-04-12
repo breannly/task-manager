@@ -43,7 +43,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "name='" + name + '}';
+        return String.join(",",
+                getId().toString(),
+                TaskType.TASK.name(),
+                getName(),
+                getStatus(),
+                getDescription());
     }
 }

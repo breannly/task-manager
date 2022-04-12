@@ -12,9 +12,12 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-        return "Epic{" +
-                "name= " + getName() +
-                ", subtasks=" + subtasks.values() + "}";
+        return String.join(",",
+                getId().toString(),
+                TaskType.EPIC.name(),
+                getName(),
+                getStatus(),
+                getDescription());
     }
 
     public HashMap<Long, Subtask> getSubtask() {
