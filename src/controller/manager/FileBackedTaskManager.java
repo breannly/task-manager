@@ -1,9 +1,9 @@
 package controller.manager;
 
 import controller.imanager.TaskManager;
-import model.Epic;
-import model.Subtask;
-import model.Task;
+import model.entity.Epic;
+import model.entity.Subtask;
+import model.entity.Task;
 
 import java.util.List;
 

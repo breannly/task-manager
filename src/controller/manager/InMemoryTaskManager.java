@@ -2,11 +2,11 @@ package controller.manager;
 
 import controller.imanager.HistoryManager;
 import controller.imanager.TaskManager;
-import model.StatusType;
+import model.enums.StatusType;
 import controller.utility.Managers;
-import model.Epic;
-import model.Subtask;
-import model.Task;
+import model.entity.Epic;
+import model.entity.Subtask;
+import model.entity.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;

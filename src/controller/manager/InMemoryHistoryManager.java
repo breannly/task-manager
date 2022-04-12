@@ -1,8 +1,8 @@
 package controller.manager;
 
 import controller.imanager.HistoryManager;
-import model.HistoryNode;
-import model.Task;
+import model.node.HistoryNode;
+import model.entity.Task;
 
 import java.util.*;
 

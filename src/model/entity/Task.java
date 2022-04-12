@@ -1,4 +1,6 @@
-package model;
+package model.entity;
+
+import model.enums.TaskType;
 
 public class Task {
     private String name;

@@ -1,4 +1,4 @@
-package model;
+package model.node;
 
 public class HistoryNode<T> {
     public T data;

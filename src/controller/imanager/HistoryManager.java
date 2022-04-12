@@ -1,6 +1,6 @@
 package controller.imanager;
 
-import model.Task;
+import model.entity.Task;
 
 import java.util.List;
 
