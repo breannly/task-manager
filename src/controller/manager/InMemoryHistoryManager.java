@@ -5,6 +5,7 @@ import model.node.HistoryNode;
 import model.entity.Task;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private final HistoryLinkedList<Task> historyList;
@@ -35,6 +36,27 @@ public class InMemoryHistoryManager implements HistoryManager {
             HistoryNode<Task> node = historyMap.get(id);
             historyList.removeNode(node);
         }
+    }
+
+    public static String toString(HistoryManager manager) {
+        String history = " ";
+        if (!manager.getHistory().isEmpty()) {
+            history = manager.getHistory()
+                    .stream()
+                    .map(x -> x.getId().toString())
+                    .collect(Collectors.joining(","));
+        }
+        return history;
+    }
+
+    public static List<Long> fromString(String value) {
+        List<Long> historyList = new LinkedList<>();
+        String[] history = value.split(",");
+
+        for (String taskId : history) {
+            historyList.add(Long.parseLong(taskId));
+        }
+        return historyList;
     }
 
     class HistoryLinkedList<T> {
