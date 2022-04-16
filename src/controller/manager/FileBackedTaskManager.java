@@ -17,6 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+    private static final String LINE_DELIMITER = "\n";
+    private static final String VALUE_DELIMITER = ",";
+
     private final File file;
 
     public FileBackedTaskManager(File file) {
@@ -151,17 +154,17 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             if (!Files.exists(Path.of(file.getPath()))) throw new ManagerSaveException();
             HistoryManager historyManager = Managers.getDefaultHistory();
             var sb = new StringBuilder();
-            sb.append("id,type,name,status,description,epic").append("\n");
+            sb.append("id,type,name,status,description,epic").append(LINE_DELIMITER);
             for (Task task : getTasksList()) {
-                sb.append(task.toString()).append(",").append("\n");
+                sb.append(task.toString()).append(VALUE_DELIMITER).append(LINE_DELIMITER);
             }
             for (Epic epic : getEpicsList()) {
-                sb.append(epic.toString()).append(",").append("\n");
+                sb.append(epic.toString()).append(VALUE_DELIMITER).append(LINE_DELIMITER);
             }
             for (Subtask subtask : getSubtasksList()) {
-                sb.append(subtask.toString()).append(",").append("\n");
+                sb.append(subtask.toString()).append(VALUE_DELIMITER).append(LINE_DELIMITER);
             }
-            sb.append("\n");
+            sb.append(LINE_DELIMITER);
             sb.append(InMemoryHistoryManager.toString(historyManager));
             fileWriter.write(sb.toString());
         } catch (IOException e) {
@@ -171,7 +174,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
         String fileContent = ReaderFile.readFileContents(file);
-        String[] arrayContent = fileContent.split("\\n");
+        String[] arrayContent = fileContent.split(LINE_DELIMITER);
         int length = arrayContent.length;
         List<Long> history = InMemoryHistoryManager.fromString(arrayContent[length - 1]);
         String[] arrayTaskContent = Arrays.copyOfRange(arrayContent, 1, length - 2);
@@ -196,7 +199,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     private Task fromString(String value) throws ManagerSaveException {
-        String[] data = value.split(",");
+        String[] data = value.split(VALUE_DELIMITER);
         return addTask(TaskType.valueOf(data[1]), data);
     }
 
@@ -205,18 +208,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             case TASK:
                 Task task = new Task(data[2], data[4], data[3]);
                 task.setId(Long.parseLong(data[0]));
-                updateTask(task);
+                getTasks().put(task.getId(), task);
                 return task;
             case EPIC:
                 Epic epic = new Epic(data[2], data[4]);
                 epic.setId(Long.parseLong(data[0]));
-                updateEpic(epic);
+                getEpics().put(epic.getId(), epic);
                 return epic;
             case SUBTASK:
                 Subtask subtask = new Subtask(data[2], data[4], data[3], Long.parseLong(data[5]));
                 subtask.setId(Long.parseLong(data[0]));
                 Epic epicById = getEpics().get(Long.parseLong(data[5]));
-                updateSubtask(subtask);
+                epicById.getSubtask().put(subtask.getId(), subtask);
+                getSubtasks().put(subtask.getId(), subtask);
                 return subtask;
         }
         return null;
