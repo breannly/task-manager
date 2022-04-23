@@ -1,2 +1,5 @@
-package controller.imanager;public class TaskManagerTest {
+package controller.imanager;
+
+abstract class TaskManagerTest<T extends TaskManager> {
+    
 }
