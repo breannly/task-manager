@@ -1,3 +1,5 @@
+package entity;
+
 import controller.exception.ManagerSaveException;
 import controller.imanager.TaskManager;
 import controller.utility.Managers;
