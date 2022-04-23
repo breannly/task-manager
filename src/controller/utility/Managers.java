@@ -6,7 +6,7 @@ import controller.manager.InMemoryTaskManager;
 import controller.imanager.TaskManager;
 
 public class Managers {
-    public static HistoryManager historyManager;
+    private static HistoryManager historyManager;
 
     public static TaskManager getDefault() {
         return new InMemoryTaskManager();
