@@ -1,4 +1,7 @@
-import static org.junit.jupiter.api.Assertions.*;
-class InMemoryTaskManagerTest {
-  
+package controller.manager;
+
+import controller.imanager.TaskManagerTest;
+
+class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
+
 }
