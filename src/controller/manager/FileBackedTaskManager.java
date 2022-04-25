@@ -162,7 +162,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 sb.append(epic.toString()).append(VALUE_DELIMITER).append(LINE_DELIMITER);
             }
             for (Subtask subtask : getSubtasksList()) {
-                sb.append(subtask.toString()).append(VALUE_DELIMITER).append(LINE_DELIMITER);
+                sb.append(subtask.toString()).append(LINE_DELIMITER);
             }
             sb.append(LINE_DELIMITER);
             sb.append(InMemoryHistoryManager.toString(historyManager));
@@ -176,7 +176,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String fileContent = ReaderFile.readFileContents(file);
         String[] arrayContent = fileContent.split(LINE_DELIMITER);
         int length = arrayContent.length;
-        List<Long> history = InMemoryHistoryManager.fromString(arrayContent[length - 1]);
+        String history = arrayContent[length - 1];
         String[] arrayTaskContent = Arrays.copyOfRange(arrayContent, 1, length - 2);
 
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
@@ -185,16 +185,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             fileBackedTaskManager.fromString(task);
         }
 
-        for(Long id : history) {
-            if (fileBackedTaskManager.getTasks().get(id) != null) {
-                fileBackedTaskManager.getTaskById(id);
-            } else if (fileBackedTaskManager.getEpics().get(id) != null) {
-                fileBackedTaskManager.getEpicById(id);
-            } else {
-                fileBackedTaskManager.getSubtaskById(id);
+        if (!history.isBlank()) {
+            List<Long> historyListId = InMemoryHistoryManager.fromString(arrayContent[length - 1]);
+            for (Long id : historyListId) {
+                if (fileBackedTaskManager.getTasks().get(id) != null) {
+                    fileBackedTaskManager.getTaskById(id);
+                } else if (fileBackedTaskManager.getEpics().get(id) != null) {
+                    fileBackedTaskManager.getEpicById(id);
+                } else {
+                    fileBackedTaskManager.getSubtaskById(id);
+                }
             }
         }
-
         return fileBackedTaskManager;
     }
 
@@ -203,7 +205,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return addTask(TaskType.valueOf(data[1]), data);
     }
 
-    private Task addTask (TaskType type, String[] data) throws ManagerSaveException {
+    private Task addTask(TaskType type, String[] data) throws ManagerSaveException {
         switch (type) {
             case TASK:
                 Task task = new Task(data[2], data[4], data[3]);
@@ -213,6 +215,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             case EPIC:
                 Epic epic = new Epic(data[2], data[4]);
                 epic.setId(Long.parseLong(data[0]));
+                checkStatus(epic);
                 getEpics().put(epic.getId(), epic);
                 return epic;
             case SUBTASK:
@@ -220,6 +223,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 subtask.setId(Long.parseLong(data[0]));
                 Epic epicById = getEpics().get(Long.parseLong(data[5]));
                 epicById.getSubtask().put(subtask.getId(), subtask);
+                checkStatus(epicById);
                 getSubtasks().put(subtask.getId(), subtask);
                 return subtask;
         }
