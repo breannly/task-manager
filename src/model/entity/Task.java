@@ -43,6 +43,14 @@ public class Task {
         this.status = status;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     @Override
     public String toString() {
         return String.join(",",
@@ -52,4 +60,5 @@ public class Task {
                 getStatus(),
                 getDescription());
     }
+
 }
