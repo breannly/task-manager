@@ -28,9 +28,11 @@ class HistoryManagerTest {
     @Test
     public void shouldAdd() {
         historyManager.add(task);
+
         final List<Task> history = historyManager.getHistory();
-        Assertions.assertNotNull(history, "История не пустая.");
-        Assertions.assertEquals(1, history.size(), "История не пустая.");
+
+        Assertions.assertNotNull(history);
+        Assertions.assertEquals(1, history.size(), "Неверное количество задач");
     }
 
     @Test
@@ -40,15 +42,17 @@ class HistoryManagerTest {
         historyManager.add(subtask);
         historyManager.add(epic);
         historyManager.add(task);
+
         final List<Task> history = historyManager.getHistory();
 
         Assertions.assertNotNull(history, "История не пустая");
-        Assertions.assertEquals(3, history.size(), "Повторений нет");
+        Assertions.assertEquals(3, history.size(), "Присутствует дублирование");
     }
 
     @Test
     public void shouldNotRemoveAnythingWhenTheListIsEmpty() {
         historyManager.remove(task.getId());
+
         final List<Task> history = historyManager.getHistory();
 
         Assertions.assertEquals(0, history.size(), "Список пуст");
@@ -100,6 +104,7 @@ class HistoryManagerTest {
     public void shouldReturnEmptyListWhenEmptyTaskHistory() {
         final List<Task> history = new ArrayList<>();
 
+        Assertions.assertEquals(0, history.size(), "Список не пуст");
         Assertions.assertArrayEquals(history.toArray(), historyManager.getHistory().toArray());
     }
 
@@ -116,6 +121,7 @@ class HistoryManagerTest {
         history.add(epic);
         history.add(task);
 
+        Assertions.assertEquals(3, history.size(), "Присутствует дублирование");
         Assertions.assertArrayEquals(history.toArray(), historyManager.getHistory().toArray());
     }
 
