@@ -29,7 +29,7 @@ public class InMemoryTaskManager implements TaskManager {
         idGenerator = new IdGenerator();
     }
 
-    private void checkStatus(Epic epic) {
+    protected void checkStatus(Epic epic) {
         int countNew = 0;
         int countDone = 0;
         int lengthSubtasks = epic.getSubtask().size();
