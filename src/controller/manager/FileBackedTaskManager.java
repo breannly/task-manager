@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     private static final String LINE_DELIMITER = "\n";
@@ -176,8 +177,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         String fileContent = ReaderFile.readFileContents(file);
         String[] arrayContent = fileContent.split(LINE_DELIMITER);
         int length = arrayContent.length;
-        String history = arrayContent[length - 1];
-        String[] arrayTaskContent = Arrays.copyOfRange(arrayContent, 1, length - 2);
+        String history;
+        String[] arrayTaskContent;
+
+        if (length > 2) {
+            history = arrayContent[length - 1];
+            arrayTaskContent = Arrays.copyOfRange(arrayContent, 1, length - 2);
+        } else {
+            history = "";
+            arrayTaskContent = Arrays.copyOfRange(arrayContent,1, length);
+        }
 
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
 
@@ -185,7 +194,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             fileBackedTaskManager.fromString(task);
         }
 
-        if (!history.isBlank()) {
+        if (!history.isEmpty()) {
             List<Long> historyListId = InMemoryHistoryManager.fromString(arrayContent[length - 1]);
             for (Long id : historyListId) {
                 if (fileBackedTaskManager.getTasks().get(id) != null) {
@@ -228,5 +237,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
                 return subtask;
         }
         return null;
+    }
+
+    public static String toString(HistoryManager manager) {
+        String history = "";
+        if (!manager.getHistory().isEmpty()) {
+            history = manager.getHistory()
+                    .stream()
+                    .map(x -> x.getId().toString())
+                    .collect(Collectors.joining(","));
+        }
+        return history;
     }
 }
