@@ -2,18 +2,29 @@ package model.entity;
 
 import model.enums.TaskType;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
     private String name;
     private String description;
     private Long id;
-    private String status;cd 
+    private String status;
+    private LocalTime duration;
+    private LocalDate startTime;
 
-    public Task(String name, String description, String status) {
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
+    public Task(String name, String description, String status, String duration, String startTime) {
         this.name = name;
         this.description = description;
         this.status = status;
+        this.duration = LocalTime.parse(duration, DATE_TIME_FORMATTER);
+        this.startTime = LocalDate.parse(startTime, TIME_FORMATTER);
     }
 
     public Task(String name, String description) {
@@ -35,6 +46,10 @@ public class Task {
 
     public String getStatus() {
         return status;
+    }
+
+    public LocalDateTime getEndTime() {
+        return LocalDateTime.of(startTime, duration);
     }
 
     public void setId(Long id) {
