@@ -37,6 +37,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
         Assertions.assertTrue(file.exists(), "Файл не создался");
         Assertions.assertEquals(expected, actual, "Значения не совпадают");
+        Assertions.assertEquals(2,manager.getHistory().size(), "Значения не совпадают");
         Assertions.assertTrue(file.delete(), "Файл не удалился");
     }
 
@@ -49,7 +50,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
                 "id,type,name,status,description,epic\n" +
                 "1,TASK,test,NEW,test,\n" +
                 "\n" +
-                " ";
+                "";
 
         String actual = ReaderFile.readFileContents(file);
 
@@ -63,11 +64,12 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         TaskManager manager = new FileBackedTaskManager(file);
         Epic epic = new Epic("test", "test");
         manager.addEpic(epic);
+        manager.getEpicById(epic.getId());
         String expected =
                 "id,type,name,status,description,epic\n" +
                 "1,EPIC,test,NEW,test,\n" +
                 "\n" +
-                " ";
+                "1";
         String actual = ReaderFile.readFileContents(file);
 
         Assertions.assertTrue(file.exists(), "Файл не создался");

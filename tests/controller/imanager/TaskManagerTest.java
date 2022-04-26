@@ -15,7 +15,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     private static TaskManager taskManager;
 
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws ManagerSaveException {
         taskManager = Managers.getDefault();
     }
 
@@ -168,7 +168,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.deleteEpics();
 
         final List<Epic> epics = taskManager.getEpicsList();
-
         Assertions.assertEquals(0, epics.size(), "Список не пуст");
     }
 
