@@ -1,5 +1,6 @@
 package model.entity;
 
+import controller.exception.FormatException;
 import model.enums.TaskType;
 
 import java.util.Objects;
@@ -12,12 +13,14 @@ public class Subtask extends Task {
         this.IdEpic = IdEpic;
     }
 
-    public Long getIdEpic() {
-        return IdEpic;
+    public Subtask(String name, String description, String status, Long IdEpic, String duration, String startTime)
+            throws FormatException {
+        super(name, description, status, duration, startTime);
+        this.IdEpic = IdEpic;
     }
 
-    public void setIdEpic(Long idEpic) {
-        IdEpic = idEpic;
+    public Long getIdEpic() {
+        return IdEpic;
     }
 
     @Override
