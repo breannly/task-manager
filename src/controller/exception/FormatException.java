@@ -1,2 +1,4 @@
-package controller.exception;public class FormatException {
+package controller.exception;
+
+public class FormatException extends Exception {
 }
