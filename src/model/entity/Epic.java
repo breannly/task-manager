@@ -12,6 +12,9 @@ public class Epic extends Task {
 
     public Epic(String name, String description) {
         super(name, description);
+        setDuration(Optional.empty());
+        setStartTime(Optional.empty());
+        setEndTime(Optional.empty());
         subtasks = new HashMap<>();
     }
 
@@ -36,11 +39,18 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
+        String durationString = getFromDurationString(getDuration());
+        String startTimeString = getFromStartTimeString(getStartTime());
+        String endTimeString = getFromEndTimeString(endTime);
+
         return String.join(",",
                 getId().toString(),
                 TaskType.EPIC.name(),
                 getName(),
                 getStatus(),
-                getDescription());
+                getDescription(),
+                durationString,
+                startTimeString,
+                endTimeString);
     }
 }

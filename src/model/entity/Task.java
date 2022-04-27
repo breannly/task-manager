@@ -28,7 +28,8 @@ public class Task {
         this.status = status;
     }
 
-    public Task(String name, String description, String status, String duration, String startTime) throws FormatException {
+    public Task(String name, String description, String status, String duration, String startTime)
+            throws FormatException {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -69,7 +70,7 @@ public class Task {
         if (startTime.isPresent() && duration.isPresent())
             return Optional.ofNullable(startTime.get().plus(duration.get()));
         else
-            return null;
+            return Optional.empty();
     }
 
     public void setId(Long id) {
@@ -98,12 +99,19 @@ public class Task {
 
     @Override
     public String toString() {
+        String durationString = getFromDurationString(duration);
+        String startTimeString = getFromStartTimeString(startTime);
+        String endTimeString = getFromEndTimeString(getEndTime());
+
         return String.join(",",
                 getId().toString(),
                 TaskType.TASK.name(),
                 getName(),
                 getStatus(),
-                getDescription());
+                getDescription(),
+                durationString,
+                startTimeString,
+                endTimeString);
     }
 
     @Override
@@ -112,9 +120,9 @@ public class Task {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
         return Objects.equals(name, task.name)
-               && Objects.equals(description, task.description)
-               && Objects.equals(id, task.id)
-               && Objects.equals(status, task.status);
+                && Objects.equals(description, task.description)
+                && Objects.equals(id, task.id)
+                && Objects.equals(status, task.status);
     }
 
     @Override
@@ -122,7 +130,7 @@ public class Task {
         return Objects.hash(name, description, id, status);
     }
 
-    private Optional<Duration> getFromStringDuration(String duration) throws FormatException {
+    protected Optional<Duration> getFromStringDuration(String duration) throws FormatException {
         if (duration != null) {
             try {
                 return Optional.of(Duration.between(LocalTime.MIN, LocalTime.parse(duration, TIME_FORMATTER)));
@@ -134,7 +142,7 @@ public class Task {
         return Optional.empty();
     }
 
-    private Optional<LocalDateTime> getFromStringStartTime(String startTime) throws FormatException {
+    protected Optional<LocalDateTime> getFromStringStartTime(String startTime) throws FormatException {
         if (startTime != null) {
             try {
                 return Optional.of(LocalDateTime.parse(startTime, DATE_TIME_FORMATTER));
@@ -144,5 +152,18 @@ public class Task {
         }
 
         return Optional.empty();
+    }
+
+    protected String getFromStartTimeString(Optional<LocalDateTime> startTime) {
+        return startTime.map(localDateTime -> localDateTime.format(DATE_TIME_FORMATTER)).orElse("null");
+    }
+
+    protected String getFromEndTimeString(Optional<LocalDateTime> endTime) {
+        return endTime.map(localDateTime -> localDateTime.format(DATE_TIME_FORMATTER)).orElse("null");
+    }
+
+    protected String getFromDurationString(Optional<Duration> duration) {
+        return duration.map(value -> LocalTime.of(value.toHoursPart(), value.toMinutesPart())
+                        .format(TIME_FORMATTER)).orElse("null");
     }
 }

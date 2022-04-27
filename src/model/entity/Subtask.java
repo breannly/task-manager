@@ -6,7 +6,7 @@ import model.enums.TaskType;
 import java.util.Objects;
 
 public class Subtask extends Task {
-    private Long IdEpic;
+    private final Long IdEpic;
 
     public Subtask(String name, String description, String status, Long IdEpic) {
         super(name, description, status);
@@ -25,13 +25,20 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
+        String durationString = getFromDurationString(getDuration());
+        String startTimeString = getFromStartTimeString(getStartTime());
+        String endTimeString = getFromEndTimeString(getEndTime());
+
         return String.join(",",
                 getId().toString(),
                 TaskType.SUBTASK.name(),
                 getName(),
                 getStatus(),
                 getDescription(),
-                getIdEpic().toString());
+                getIdEpic().toString(),
+                durationString,
+                startTimeString,
+                endTimeString);
     }
 
     @Override
