@@ -1,5 +1,6 @@
 package controller.manager;
 
+import controller.exception.FormatException;
 import controller.exception.ManagerSaveException;
 import controller.imanager.HistoryManager;
 import controller.imanager.TaskManager;
@@ -155,12 +156,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             if (!Files.exists(Path.of(file.getPath()))) throw new ManagerSaveException();
             HistoryManager historyManager = Managers.getDefaultHistory();
             var sb = new StringBuilder();
-            sb.append("id,type,name,status,description,epic").append(LINE_DELIMITER);
+            sb.append("id,type,name,status,description,epic,duration,startTime,endTime").append(LINE_DELIMITER);
             for (Task task : getTasksList()) {
-                sb.append(task.toString()).append(VALUE_DELIMITER).append(LINE_DELIMITER);
+                sb.append(task.toString()).append(LINE_DELIMITER);
             }
             for (Epic epic : getEpicsList()) {
-                sb.append(epic.toString()).append(VALUE_DELIMITER).append(LINE_DELIMITER);
+                sb.append(epic.toString()).append(LINE_DELIMITER);
             }
             for (Subtask subtask : getSubtasksList()) {
                 sb.append(subtask.toString()).append(LINE_DELIMITER);
@@ -173,20 +174,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException {
+    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException, FormatException {
         String fileContent = ReaderFile.readFileContents(file);
         String[] arrayContent = fileContent.split(LINE_DELIMITER);
         int length = arrayContent.length;
-        String history;
-        String[] arrayTaskContent;
-
-        if (length > 2) {
-            history = arrayContent[length - 1];
-            arrayTaskContent = Arrays.copyOfRange(arrayContent, 1, length - 2);
-        } else {
-            history = "";
-            arrayTaskContent = Arrays.copyOfRange(arrayContent,1, length);
-        }
+        String history = history = arrayContent[length - 1];
+        String[] arrayTaskContent = Arrays.copyOfRange(arrayContent, 1, length - 2);
 
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
 
@@ -194,7 +187,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
             fileBackedTaskManager.fromString(task);
         }
 
-        if (!history.isEmpty()) {
+        if (!history.isBlank()) {
             List<Long> historyListId = InMemoryHistoryManager.fromString(arrayContent[length - 1]);
             for (Long id : historyListId) {
                 if (fileBackedTaskManager.getTasks().get(id) != null) {
@@ -209,44 +202,46 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return fileBackedTaskManager;
     }
 
-    private Task fromString(String value) throws ManagerSaveException {
+    private Task fromString(String value) throws ManagerSaveException, FormatException {
         String[] data = value.split(VALUE_DELIMITER);
         return addTask(TaskType.valueOf(data[1]), data);
     }
 
-    private Task addTask(TaskType type, String[] data) throws ManagerSaveException {
+    private Task addTask(TaskType type, String[] data) throws ManagerSaveException, FormatException {
         switch (type) {
             case TASK:
-                Task task = new Task(data[2], data[4], data[3]);
+                Task task = new Task(data[2], data[4], data[3], checkData(data[5]), checkData(data[6]));
                 task.setId(Long.parseLong(data[0]));
                 getTasks().put(task.getId(), task);
                 return task;
             case EPIC:
                 Epic epic = new Epic(data[2], data[4]);
                 epic.setId(Long.parseLong(data[0]));
-                checkStatus(epic);
+                epic.setStatus(data[3]);
                 getEpics().put(epic.getId(), epic);
                 return epic;
             case SUBTASK:
-                Subtask subtask = new Subtask(data[2], data[4], data[3], Long.parseLong(data[5]));
+                Subtask subtask = new Subtask(data[2],
+                        data[4],
+                        data[3],
+                        Long.parseLong(data[5]),
+                        checkData(data[6]),
+                        checkData(data[7]));
                 subtask.setId(Long.parseLong(data[0]));
                 Epic epicById = getEpics().get(Long.parseLong(data[5]));
                 epicById.getSubtask().put(subtask.getId(), subtask);
                 checkStatus(epicById);
                 getSubtasks().put(subtask.getId(), subtask);
+                checkEndTimeEpic(epicById);
                 return subtask;
         }
         return null;
     }
 
-    public static String toString(HistoryManager manager) {
-        String history = "";
-        if (!manager.getHistory().isEmpty()) {
-            history = manager.getHistory()
-                    .stream()
-                    .map(x -> x.getId().toString())
-                    .collect(Collectors.joining(","));
+    private String checkData(String data) {
+        if (data.equals("null")) {
+            data = null;
         }
-        return history;
+        return data;
     }
 }

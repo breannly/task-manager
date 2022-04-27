@@ -9,10 +9,11 @@ import model.entity.Epic;
 import model.entity.Subtask;
 import model.entity.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InMemoryTaskManager implements TaskManager {
     private final Map<Long, Task> tasks;
@@ -59,6 +60,27 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         epic.setStatus(StatusType.IN_PROGRESS.toString());
+    }
+
+    protected void checkEndTimeEpic(Epic epic) {
+        Optional<Duration> sumDuration = getSubtasksList().stream()
+                .map(Task::getDuration)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .reduce(Duration::plus);
+
+        List<LocalDateTime> startTimeList = getSubtasksList().stream()
+                .map(Task::getStartTime)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        Optional<LocalDateTime> minStartTime = startTimeList.stream().min(Comparator.naturalOrder());
+        Optional<LocalDateTime> maxStartTime = startTimeList.stream().max(Comparator.naturalOrder());
+
+        sumDuration.ifPresentOrElse(x -> epic.setDuration(sumDuration), () -> epic.setDuration(Optional.empty()));
+        minStartTime.ifPresentOrElse(x -> epic.setStartTime(minStartTime), () -> epic.setStartTime(Optional.empty()));
+        maxStartTime.ifPresentOrElse(x -> epic.setEndTime(maxStartTime), () -> epic.setEndTime(Optional.empty()));
     }
 
     private void removeTasksFromHistory(Map<Long, ? extends Task> taskList) {
@@ -167,7 +189,9 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubtask(Subtask subtask) throws ManagerSaveException {
         subtasks.put(subtask.getId(), subtask);
-        checkStatus(getEpicById(subtask.getIdEpic()));
+        Epic epic = getEpicById(subtask.getIdEpic());
+        checkStatus(epic);
+        checkEndTimeEpic(epic);
     }
 
     @Override
@@ -195,6 +219,7 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = epics.get(subtask.getIdEpic());
         epic.addSubtask(subtask);
         checkStatus(epic);
+        checkEndTimeEpic(epic);
 
         return subtask;
     }

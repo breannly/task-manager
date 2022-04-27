@@ -39,7 +39,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     public static String toString(HistoryManager manager) {
-        String history = "";
+        String history = " ";
         if (!manager.getHistory().isEmpty()) {
             history = manager.getHistory()
                     .stream()
