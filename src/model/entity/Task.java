@@ -66,7 +66,7 @@ public class Task {
         return startTime;
     }
 
-    protected Optional<LocalDateTime> getEndTime() {
+    public Optional<LocalDateTime> getEndTime() {
         if (startTime.isPresent() && duration.isPresent())
             return Optional.ofNullable(startTime.get().plus(duration.get()));
         else
@@ -95,6 +95,14 @@ public class Task {
 
     public void setStartTime(Optional<LocalDateTime> startTime) {
         this.startTime = startTime;
+    }
+
+    public void setDuration(String duration) throws FormatException {
+        this.duration = getFromStringDuration(duration);
+    }
+
+    public void setStartTime(String startTime) throws FormatException {
+        this.startTime = getFromStringStartTime(startTime);
     }
 
     @Override
@@ -135,7 +143,7 @@ public class Task {
             try {
                 return Optional.of(Duration.between(LocalTime.MIN, LocalTime.parse(duration, TIME_FORMATTER)));
             } catch (DateTimeException exception) {
-                throw new FormatException();
+                throw new FormatException("Неверный формат данных");
             }
         }
 
@@ -147,7 +155,7 @@ public class Task {
             try {
                 return Optional.of(LocalDateTime.parse(startTime, DATE_TIME_FORMATTER));
             } catch (DateTimeException exception) {
-                throw new FormatException();
+                throw new FormatException("Неверный формат данных");
             }
         }
 
