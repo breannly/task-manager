@@ -1,6 +1,7 @@
 package controller.manager;
 
 import controller.exception.FormatException;
+import controller.exception.IntersectionTimeException;
 import controller.exception.ManagerSaveException;
 import controller.imanager.HistoryManager;
 import controller.imanager.TaskManager;
@@ -16,7 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
     private static final String LINE_DELIMITER = "\n";
@@ -41,6 +42,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     @Override
     public List<Epic> getEpicsList() {
         return super.getEpicsList();
+    }
+
+    @Override
+    public Set<Task> getPrioritizedTasks() {
+        return super.getPrioritizedTasks();
     }
 
     @Override
@@ -86,25 +92,25 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public void updateTask(Task task) throws ManagerSaveException {
+    public void updateTask(Task task) throws ManagerSaveException, IntersectionTimeException {
         super.updateTask(task);
         save();
     }
 
     @Override
-    public void updateEpic(Epic epic) throws ManagerSaveException {
+    public void updateEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException {
         super.updateEpic(epic);
         save();
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws ManagerSaveException {
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
         super.updateSubtask(subtask);
         save();
     }
 
     @Override
-    public Task addTask(Task task) throws ManagerSaveException {
+    public Task addTask(Task task) throws ManagerSaveException, IntersectionTimeException {
         super.addTask(task);
         save();
 
@@ -112,7 +118,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public Epic addEpic(Epic epic) throws ManagerSaveException {
+    public Epic addEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException {
         super.addEpic(epic);
         save();
 
@@ -120,7 +126,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public Subtask addSubtask(Subtask subtask) throws ManagerSaveException {
+    public Subtask addSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
         super.addSubtask(subtask);
         save();
 
