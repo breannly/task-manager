@@ -1,5 +1,7 @@
 package controller.manager;
 
+import controller.exception.FormatException;
+import controller.exception.IntersectionTimeException;
 import controller.exception.ManagerSaveException;
 import controller.imanager.TaskManager;
 import controller.imanager.TaskManagerTest;
@@ -16,21 +18,27 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     File file = new File("test.csv");
 
     @Test
-    public void shouldSaveTasksAndHistoryToFile() throws ManagerSaveException {
+    public void shouldSaveTasksAndHistoryToFile()
+            throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager manager = new FileBackedTaskManager(file);
-        Task task = new Task("test", "test","NEW");
+        Task task = new Task("test", "test","NEW", null, null);
         manager.addTask(task);
         Epic epic = new Epic("test", "test");
         manager.addEpic(epic);
-        Subtask subtask = new Subtask("test", "test", "NEW", epic.getId());
+        Subtask subtask = new Subtask("test",
+                "test",
+                "NEW",
+                epic.getId(),
+                null,
+                null);
         manager.addSubtask(subtask);
         manager.getTaskById(task.getId());
         manager.getSubtaskById(subtask.getId());
         String expected =
-                "id,type,name,status,description,epic\n" +
-                "1,TASK,test,NEW,test,\n" +
-                "2,EPIC,test,NEW,test,\n" +
-                "3,SUBTASK,test,NEW,test,2\n" +
+                "id,type,name,status,description,epic,duration,startTime,endTime\n" +
+                "1,TASK,test,NEW,test,null,null,null\n" +
+                "2,EPIC,test,NEW,test,null,null,null\n" +
+                "3,SUBTASK,test,NEW,test,2,null,null,null\n" +
                 "\n" +
                 "1,3";
         String actual = ReaderFile.readFileContents(file);
@@ -42,15 +50,16 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldSaveTasksToFileWithoutHistoryToFile() throws ManagerSaveException {
+    public void shouldSaveTasksToFileWithoutHistoryToFile()
+            throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager manager = new FileBackedTaskManager(file);
-        Task task = new Task("test", "test", "NEW");
+        Task task = new Task("test", "test", "NEW", null, null);
         manager.addTask(task);
         String expected =
-                "id,type,name,status,description,epic\n" +
-                "1,TASK,test,NEW,test,\n" +
+                "id,type,name,status,description,epic,duration,startTime,endTime\n" +
+                "1,TASK,test,NEW,test,null,null,null\n" +
                 "\n" +
-                "";
+                " ";
 
         String actual = ReaderFile.readFileContents(file);
 
@@ -60,16 +69,15 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldSaveEpicWithoutSubtasksToFile() throws ManagerSaveException {
+    public void shouldSaveEpicWithoutSubtasksToFile() throws ManagerSaveException, IntersectionTimeException {
         TaskManager manager = new FileBackedTaskManager(file);
         Epic epic = new Epic("test", "test");
         manager.addEpic(epic);
-        manager.getEpicById(epic.getId());
         String expected =
-                "id,type,name,status,description,epic\n" +
-                "1,EPIC,test,NEW,test,\n" +
+                "id,type,name,status,description,epic,duration,startTime,endTime\n" +
+                "1,EPIC,test,NEW,test,null,null,null\n" +
                 "\n" +
-                "1";
+                " ";
         String actual = ReaderFile.readFileContents(file);
 
         Assertions.assertTrue(file.exists(), "Файл не создался");
@@ -78,14 +86,25 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldLoadTasksAndHistoryFromFile() throws ManagerSaveException {
+    public void shouldLoadTasksAndHistoryFromFile()
+            throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager generalManager = new FileBackedTaskManager(file);
-        Task task = new Task("test", "test","NEW");
+        Task task = new Task("test", "test","NEW",null,null);
         generalManager.addTask(task);
         Epic epic = new Epic("test", "test");
         generalManager.addEpic(epic);
-        Subtask subtask1 = new Subtask("test", "test", "DONE", epic.getId());
-        Subtask subtask2 = new Subtask("test", "test", "IN_PROGRESS", epic.getId());
+        Subtask subtask1 = new Subtask("test",
+                "test",
+                "DONE",
+                epic.getId(),
+                null,
+                null);
+        Subtask subtask2 = new Subtask("test",
+                "test",
+                "IN_PROGRESS",
+                epic.getId(),
+                null,
+                null);
         generalManager.addSubtask(subtask1);
         generalManager.addSubtask(subtask2);
         generalManager.getTaskById(task.getId());
@@ -101,9 +120,10 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldLoadTasksWithoutHistoryFromFile() throws ManagerSaveException {
+    public void shouldLoadTasksWithoutHistoryFromFile()
+            throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager generalManager = new FileBackedTaskManager(file);
-        Task task = new Task("test", "test","NEW");
+        Task task = new Task("test", "test","NEW", null, null);
         generalManager.addTask(task);
         TaskManager manager = FileBackedTaskManager.loadFromFile(file);
 
@@ -114,7 +134,8 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldLoadEpicWithoutSubtasksFromFile() throws ManagerSaveException {
+    public void shouldLoadEpicWithoutSubtasksFromFile()
+            throws ManagerSaveException, FormatException, IntersectionTimeException {
         TaskManager generalManager = new FileBackedTaskManager(file);
         Epic epic = new Epic("test", "test");
         generalManager.addEpic(epic);

@@ -1,5 +1,7 @@
 package controller.imanager;
 
+import controller.exception.FormatException;
+import controller.exception.IntersectionTimeException;
 import controller.exception.ManagerSaveException;
 import controller.utility.Managers;
 import model.entity.Epic;
@@ -8,8 +10,10 @@ import model.entity.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import java.util.List;
+import java.util.Set;
 
 public abstract class TaskManagerTest<T extends TaskManager> {
     private static TaskManager taskManager;
@@ -20,8 +24,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldAddTask() throws ManagerSaveException {
-        Task task = new Task("test", "test", "NEW");
+    public void shouldAddTask() throws ManagerSaveException, FormatException, IntersectionTimeException {
+        Task task = new Task("test",
+                "test",
+                "NEW",
+                null,
+                null);
         taskManager.addTask(task);
 
         final List<Task> tasks = taskManager.getTasksList();
@@ -31,7 +39,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldNotAddTaskIfUseNotTask() throws ManagerSaveException {
+    public void shouldNotAddTaskIfUseNotTask() throws ManagerSaveException, IntersectionTimeException {
         Epic epic = new Epic("test", "test");
         taskManager.addTask(epic);
 
@@ -41,7 +49,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldAddEpic() throws ManagerSaveException {
+    public void shouldAddEpic() throws ManagerSaveException, IntersectionTimeException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
 
@@ -53,10 +61,15 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldAddSubtask() throws ManagerSaveException {
+    public void shouldAddSubtask() throws ManagerSaveException, IntersectionTimeException, FormatException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
-        Subtask subtask = new Subtask("test", "test", "NEW", epic.getId());
+        Subtask subtask = new Subtask("test",
+                "test",
+                "NEW",
+                epic.getId(),
+                null,
+                null);
         taskManager.addSubtask(subtask);
 
         final List<Subtask> subtasks = taskManager.getSubtasksList();
@@ -75,8 +88,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnTaskList() throws ManagerSaveException {
-        Task task = new Task("test", "test", "NEW");
+    public void shouldReturnTaskList() throws ManagerSaveException, FormatException, IntersectionTimeException {
+        Task task = new Task("test",
+                "test",
+                "NEW",
+                null,
+                null);
         taskManager.addTask(task);
 
         final List<Task> tasks = taskManager.getTasksList();
@@ -94,7 +111,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnEpicList() throws ManagerSaveException {
+    public void shouldReturnEpicList() throws ManagerSaveException, IntersectionTimeException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
 
@@ -114,10 +131,15 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnSubtaskList() throws ManagerSaveException {
+    public void shouldReturnSubtaskList() throws ManagerSaveException, FormatException, IntersectionTimeException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
-        Subtask subtask = new Subtask("test", "test", "NEW", epic.getId());
+        Subtask subtask = new Subtask("test",
+                "test",
+                "NEW",
+                epic.getId(),
+                null,
+                null);
         taskManager.addSubtask(subtask);
 
         final List<Subtask> subtasks = taskManager.getSubtasksList();
@@ -138,8 +160,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnEmptyTaskListWhenDeletingAllTasks() throws ManagerSaveException {
-        Task task1 = new Task("test", "test", "NEW");
+    public void shouldReturnEmptyTaskListWhenDeletingAllTasks()
+            throws ManagerSaveException, IntersectionTimeException, FormatException {
+        Task task1 = new Task("test",
+                "test",
+                "NEW",
+                null,
+                null);
         Task task2 = new Task("test", "test", "NEW");
         taskManager.addTask(task1);
         taskManager.addTask(task2);
@@ -160,7 +187,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnEmptyEpicListWhenDeletingAllEpics() throws ManagerSaveException {
+    public void shouldReturnEmptyEpicListWhenDeletingAllEpics() throws ManagerSaveException, IntersectionTimeException {
         Epic epic1 = new Epic("test", "test");
         Epic epic2 = new Epic("test", "test");
         taskManager.addEpic(epic1);
@@ -181,11 +208,22 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnEmptySubtaskListWhenDeletingAllSubtasks() throws ManagerSaveException {
+    public void shouldReturnEmptySubtaskListWhenDeletingAllSubtasks()
+            throws ManagerSaveException, FormatException, IntersectionTimeException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
-        Subtask subtask1 = new Subtask("test", "test", "DONE", epic.getId());
-        Subtask subtask2 = new Subtask("test", "test", "NEW", epic.getId());
+        Subtask subtask1 = new Subtask("test",
+                "test",
+                "DONE",
+                epic.getId(),
+                null,
+                null);
+        Subtask subtask2 = new Subtask("test",
+                "test",
+                "NEW",
+                epic.getId(),
+                null,
+                null);
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
         taskManager.deleteSubtasks();
@@ -198,8 +236,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnTaskById() throws ManagerSaveException {
-        Task task = new Task("test", "test", "NEW");
+    public void shouldReturnTaskById() throws ManagerSaveException, IntersectionTimeException, FormatException {
+        Task task = new Task("test",
+                "test",
+                "NEW",
+                null,
+                null);
         taskManager.addTask(task);
         Task foundTask = taskManager.getTaskById(task.getId());
 
@@ -208,8 +250,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnNullIfNonexistentTaskId() throws ManagerSaveException {
-        Task task = new Task("test", "test", "NEW");
+    public void shouldReturnNullIfNonexistentTaskId()
+            throws ManagerSaveException, IntersectionTimeException, FormatException {
+        Task task = new Task("test",
+                "test",
+                "NEW",
+                null,
+                null);
         taskManager.addTask(task);
         Task foundTask1 = taskManager.getTaskById(2L);
         Task foundTask2 = taskManager.getTaskById(null);
@@ -221,7 +268,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnEpicById() throws ManagerSaveException {
+    public void shouldReturnEpicById() throws ManagerSaveException, IntersectionTimeException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
         Epic foundEpic = taskManager.getEpicById(epic.getId());
@@ -231,7 +278,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnNullIfNonexistentEpicId() throws ManagerSaveException {
+    public void shouldReturnNullIfNonexistentEpicId() throws ManagerSaveException, IntersectionTimeException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
         Epic foundEpic1 = taskManager.getEpicById(2L);
@@ -244,10 +291,15 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnSubtaskById() throws ManagerSaveException {
+    public void shouldReturnSubtaskById() throws ManagerSaveException, IntersectionTimeException, FormatException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
-        Subtask subtask = new Subtask("test", "test", "NEW", epic.getId());
+        Subtask subtask = new Subtask("test",
+                "test",
+                "NEW",
+                epic.getId(),
+                null,
+                null);
         taskManager.addSubtask(subtask);
         Subtask foundSubtask = taskManager.getSubtaskById(subtask.getId());
 
@@ -256,10 +308,16 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnNullIfNonexistentSubtaskId() throws ManagerSaveException {
+    public void shouldReturnNullIfNonexistentSubtaskId()
+            throws ManagerSaveException, IntersectionTimeException, FormatException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
-        Subtask subtask = new Subtask("test", "test", "NEW", epic.getId());
+        Subtask subtask = new Subtask("test",
+                "test",
+                "NEW",
+                epic.getId(),
+                null,
+                null);
         taskManager.addSubtask(subtask);
         Subtask foundSubtask1 = taskManager.getSubtaskById(3L);
         Subtask foundSubtask2 = taskManager.getSubtaskById(null);
@@ -271,8 +329,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldUpdateTask() throws ManagerSaveException {
-        Task task = new Task("test", "test", "NEW");
+    public void shouldUpdateTask() throws ManagerSaveException, IntersectionTimeException, FormatException {
+        Task task = new Task("test",
+                "test",
+                "NEW",
+                null,
+                null);
         taskManager.addTask(task);
         task.setName("test1");
         task.setDescription("test1");
@@ -283,7 +345,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldUpdateEpic() throws ManagerSaveException {
+    public void shouldUpdateEpic() throws ManagerSaveException, IntersectionTimeException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
         epic.setName("test1");
@@ -294,10 +356,15 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldUpdateSubtask() throws ManagerSaveException {
+    public void shouldUpdateSubtask() throws ManagerSaveException, IntersectionTimeException, FormatException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
-        Subtask subtask = new Subtask("test", "test", "NEW", epic.getId());
+        Subtask subtask = new Subtask("test",
+                "test",
+                "NEW",
+                epic.getId(),
+                null,
+                null);
         taskManager.addSubtask(subtask);
         subtask.setName("test1");
         subtask.setDescription("test1");
@@ -309,9 +376,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldDeleteTaskById() throws ManagerSaveException {
-        Task task1 = new Task("test", "test", "NEW");
-        Task task2 = new Task("test", "test", "NEW");
+    public void shouldDeleteTaskById() throws ManagerSaveException, IntersectionTimeException, FormatException {
+        Task task1 = new Task("test", "test", "NEW", null, null);
+        Task task2 = new Task("test", "test", "NEW", null, null);
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         taskManager.deleteTaskById(task1.getId());
@@ -323,9 +390,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnUnchangedListIfPassingNonexistentTaskId() throws ManagerSaveException {
-        Task task1 = new Task("test", "test", "NEW");
-        Task task2 = new Task("test", "test", "NEW");
+    public void shouldReturnUnchangedListIfPassingNonexistentTaskId()
+            throws ManagerSaveException, IntersectionTimeException, FormatException {
+        Task task1 = new Task("test", "test", "NEW", null, null);
+        Task task2 = new Task("test", "test", "NEW", null, null);
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         taskManager.deleteTaskById(3L);
@@ -337,7 +405,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldDeleteEpicById() throws ManagerSaveException {
+    public void shouldDeleteEpicById() throws ManagerSaveException, IntersectionTimeException {
         Epic epic1 = new Epic("test", "test");
         Epic epic2 = new Epic("test", "test");
         taskManager.addEpic(epic1);
@@ -351,12 +419,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnUnchangedListIfPassingNonexistentEpicId() throws ManagerSaveException {
+    public void shouldReturnUnchangedListIfPassingNonexistentEpicId()
+            throws ManagerSaveException, IntersectionTimeException {
         Epic epic1 = new Epic("test", "test");
         Epic epic2 = new Epic("test", "test");
         taskManager.addEpic(epic1);
         taskManager.addEpic(epic2);
-        taskManager.deleteEpicById(3l);
+        taskManager.deleteEpicById(3L);
         taskManager.deleteEpicById(null);
 
         final List<Epic> epics = taskManager.getEpicsList();
@@ -365,11 +434,21 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldDeleteSubtaskById() throws ManagerSaveException {
+    public void shouldDeleteSubtaskById() throws ManagerSaveException, IntersectionTimeException, FormatException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
-        Subtask subtask1 = new Subtask("test", "test", "IN_PROGRESS", epic.getId());
-        Subtask subtask2 = new Subtask("test", "test", "DONE", epic.getId());
+        Subtask subtask1 = new Subtask("test",
+                "test",
+                "IN_PROGRESS",
+                epic.getId(),
+                null,
+                null);
+        Subtask subtask2 = new Subtask("test",
+                "test",
+                "DONE",
+                epic.getId(),
+                null,
+                null);
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
         taskManager.deleteSubtaskById(subtask1.getId());
@@ -384,14 +463,25 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnUnchangedListIfPassingNonexistentSubtaskId() throws ManagerSaveException {
+    public void shouldReturnUnchangedListIfPassingNonexistentSubtaskId()
+            throws ManagerSaveException, IntersectionTimeException, FormatException {
         Epic epic = new Epic("test", "test");
         taskManager.addEpic(epic);
-        Subtask subtask1 = new Subtask("test", "test", "IN_PROGRESS", epic.getId());
-        Subtask subtask2 = new Subtask("test", "test", "DONE", epic.getId());
+        Subtask subtask1 = new Subtask("test",
+                "test",
+                "IN_PROGRESS",
+                epic.getId(),
+                null,
+                null);
+        Subtask subtask2 = new Subtask("test",
+                "test",
+                "DONE",
+                epic.getId(),
+                null,
+                null);
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
-        taskManager.deleteSubtaskById(4l);
+        taskManager.deleteSubtaskById(4L);
         taskManager.deleteSubtaskById(null);
 
         final List<Subtask> subtasks = taskManager.getSubtasksList();
@@ -400,4 +490,20 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Assertions.assertEquals(2, subtasks.size());
     }
 
+    @Test
+    public void shouldReturnSortedListByStartTime()
+            throws FormatException, IntersectionTimeException, ManagerSaveException {
+        Task task1 = new Task("test", "test", "NEW", null, null);
+        Task task2 = new Task("test", "test", "NEW", "02:30", "30.04.22 12:00");
+        Task task3 = new Task("test", "test", "NEW", "02:30", "29.04.22 21:00");
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        taskManager.addTask(task3);
+        Set<Task> sortedTasks = taskManager.getPrioritizedTasks();
+        Task[] tasks = sortedTasks.toArray(new Task[sortedTasks.size()]);
+
+        Assertions.assertEquals(task3, tasks[0], "Первый элемент не совпадает");
+        Assertions.assertEquals(task2, tasks[1], "Второй элемент не совпадает");
+        Assertions.assertEquals(task1, tasks[2], "Третий элемент не совпадает");
+    }
 }

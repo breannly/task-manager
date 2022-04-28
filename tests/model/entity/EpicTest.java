@@ -1,12 +1,10 @@
-package entity;
+package model.entity;
 
 import controller.exception.FormatException;
 import controller.exception.IntersectionTimeException;
 import controller.exception.ManagerSaveException;
 import controller.imanager.TaskManager;
 import controller.utility.Managers;
-import model.entity.Epic;
-import model.entity.Subtask;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
