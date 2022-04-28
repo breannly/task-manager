@@ -1,5 +1,6 @@
 package controller.manager;
 
+import controller.exception.IntersectionTimeException;
 import controller.exception.ManagerSaveException;
 import controller.imanager.HistoryManager;
 import controller.imanager.TaskManager;
@@ -10,7 +11,6 @@ import model.entity.Subtask;
 import model.entity.Task;
 
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -79,8 +79,38 @@ public class InMemoryTaskManager implements TaskManager {
         Optional<LocalDateTime> maxStartTime = startTimeList.stream().max(Comparator.naturalOrder());
 
         sumDuration.ifPresentOrElse(x -> epic.setDuration(sumDuration), () -> epic.setDuration(Optional.empty()));
+        sumDuration.ifPresent(x -> maxStartTime
+                .ifPresentOrElse(y -> epic.setEndTime(maxStartTime), () -> epic.setEndTime(Optional.empty())));
         minStartTime.ifPresentOrElse(x -> epic.setStartTime(minStartTime), () -> epic.setStartTime(Optional.empty()));
-        maxStartTime.ifPresentOrElse(x -> epic.setEndTime(maxStartTime), () -> epic.setEndTime(Optional.empty()));
+    }
+
+    private void checkIntersectionTime(Task checkTask) throws IntersectionTimeException {
+        if (getPrioritizedTasks().size() < 2) {
+            return;
+        }
+
+        if (checkTask.getStartTime().isEmpty()) {
+            return;
+        }
+
+        for (Task task : getPrioritizedTasks()) {
+            if (task instanceof Epic || task.equals(checkTask) || task.getEndTime().isEmpty())
+                continue;
+
+            boolean isTaskBetween = task.getStartTime().get().isBefore(checkTask.getStartTime().get())
+                    && task.getEndTime().get().isAfter(checkTask.getStartTime().get());
+            if (isTaskBetween) {
+                throw new IntersectionTimeException("Задача с такой продолжительностью уже есть");
+            }
+
+            if (checkTask.getEndTime().isEmpty()) break;
+
+            boolean isTaskStartTimeAfter = task.getStartTime().get().isAfter(checkTask.getEndTime().get());
+            boolean isTaskEndTimeBefore = task.getEndTime().get().isBefore(checkTask.getStartTime().get());
+            if (!(isTaskStartTimeAfter || isTaskEndTimeBefore))
+                throw new IntersectionTimeException("Задача с такой продолжительностью уже есть");
+
+        }
     }
 
     private void removeTasksFromHistory(Map<Long, ? extends Task> taskList) {
@@ -94,6 +124,34 @@ public class InMemoryTaskManager implements TaskManager {
         List<Task> tasks = new ArrayList<>(this.tasks.values());
         return tasks;
     }
+
+    @Override
+    public Set<Task> getPrioritizedTasks() {
+        Set<Task> sortedTask = new TreeSet<Task>(startTimeComparator);
+        sortedTask.addAll(this.tasks.values());
+        sortedTask.addAll(this.epics.values());
+        sortedTask.addAll(this.subtasks.values());
+
+        return sortedTask;
+    }
+
+    Comparator<Task> startTimeComparator = new Comparator<Task>() {
+        @Override
+        public int compare(Task o1, Task o2) {
+            if (o1.getStartTime().isEmpty()) {
+                return (o2.getStartTime().isEmpty()) ? -1 : 1;
+            }
+            if (o2.getStartTime().isEmpty()) {
+                return -1;
+            }
+
+            if (o1.getStartTime().get().isBefore(o2.getStartTime().get())) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+    };
 
     @Override
     public List<Subtask> getSubtasksList() {
@@ -177,17 +235,19 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) throws ManagerSaveException {
+    public void updateTask(Task task) throws ManagerSaveException, IntersectionTimeException {
+        checkIntersectionTime(task);
         tasks.put(task.getId(), task);
     }
 
     @Override
-    public void updateEpic(Epic epic) throws ManagerSaveException {
+    public void updateEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException {
         epics.put(epic.getId(), epic);
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws ManagerSaveException {
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
+        checkIntersectionTime(subtask);
         subtasks.put(subtask.getId(), subtask);
         Epic epic = getEpicById(subtask.getIdEpic());
         checkStatus(epic);
@@ -195,16 +255,17 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task addTask(Task task) throws ManagerSaveException {
+    public Task addTask(Task task) throws ManagerSaveException, IntersectionTimeException {
         if (task.getClass() == Task.class) {
             task.setId(idGenerator.generateID());
+            checkIntersectionTime(task);
             tasks.put(idGenerator.getId(), task);
         }
         return task;
     }
 
     @Override
-    public Epic addEpic(Epic epic) throws ManagerSaveException {
+    public Epic addEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException {
         epic.setId(idGenerator.generateID());
         checkStatus(epic);
         epics.put(idGenerator.getId(), epic);
@@ -213,8 +274,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask addSubtask(Subtask subtask) throws ManagerSaveException {
+    public Subtask addSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
         subtask.setId(idGenerator.generateID());
+        checkIntersectionTime(subtask);
         subtasks.put(idGenerator.getId(), subtask);
         Epic epic = epics.get(subtask.getIdEpic());
         epic.addSubtask(subtask);
