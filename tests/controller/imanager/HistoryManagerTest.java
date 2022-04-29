@@ -1,5 +1,6 @@
 package controller.imanager;
 
+import controller.exception.FormatException;
 import controller.manager.InMemoryHistoryManager;
 import model.entity.Epic;
 import model.entity.Subtask;
@@ -13,15 +14,23 @@ import java.util.List;
 
 class HistoryManagerTest {
     private static HistoryManager historyManager;
-    private final Task task = new Task("test", "test", "NEW");
-    private final Epic epic = new Epic("test", "test");
-    private final Subtask subtask = new Subtask("test", "test", "NEW", 2L);
+    private Task task;
+    private Epic epic;
+    private Subtask subtask;
 
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws FormatException {
         historyManager = new InMemoryHistoryManager();
+        task = new Task("test", "test", "NEW", 0, null);
         task.setId(1L);
+        epic = new Epic("test", "test");
         epic.setId(2L);
+        subtask = new Subtask("test",
+                "NEW",
+                "NEW",
+                2L,
+                0,
+                null);
         subtask.setId(3L);
     }
 
@@ -107,22 +116,4 @@ class HistoryManagerTest {
         Assertions.assertEquals(0, history.size(), "Список не пуст");
         Assertions.assertArrayEquals(history.toArray(), historyManager.getHistory().toArray());
     }
-
-    @Test
-    public void shouldReturnWithoutRepetitions() {
-        historyManager.add(task);
-        historyManager.add(epic);
-        historyManager.add(subtask);
-        historyManager.add(epic);
-        historyManager.add(task);
-
-        final List<Task> history = new ArrayList<>();
-        history.add(subtask);
-        history.add(epic);
-        history.add(task);
-
-        Assertions.assertEquals(3, history.size(), "Присутствует дублирование");
-        Assertions.assertArrayEquals(history.toArray(), historyManager.getHistory().toArray());
-    }
-
 }

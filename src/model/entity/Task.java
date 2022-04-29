@@ -6,34 +6,25 @@ import model.enums.TaskType;
 import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-import java.util.Optional;
 
 public class Task {
     private String name;
     private String description;
     private Long id;
     private String status;
-    private Optional<Duration> duration;
-    private Optional<LocalDateTime> startTime;
+    private long duration;
+    private LocalDateTime startTime;
 
-    protected static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
 
-    public Task(String name, String description, String status) {
-        this.name = name;
-        this.description = description;
-        this.status = status;
-    }
-
-    public Task(String name, String description, String status, String duration, String startTime)
+    public Task(String name, String description, String status, long duration, String startTime)
             throws FormatException {
         this.name = name;
         this.description = description;
         this.status = status;
-        this.duration = getFromStringDuration(duration);
+        this.duration = duration;
         this.startTime = getFromStringStartTime(startTime);
     }
 
@@ -58,19 +49,19 @@ public class Task {
         return status;
     }
 
-    public Optional<Duration> getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public Optional<LocalDateTime> getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public Optional<LocalDateTime> getEndTime() {
-        if (startTime.isPresent() && duration.isPresent())
-            return Optional.ofNullable(startTime.get().plus(duration.get()));
+    public LocalDateTime getEndTime() {
+        if (startTime != null)
+            return startTime.plus(Duration.ofMinutes(duration));
         else
-            return Optional.empty();
+            return null;
     }
 
     public void setId(Long id) {
@@ -89,16 +80,12 @@ public class Task {
         this.description = description;
     }
 
-    public void setDuration(Optional<Duration> duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 
-    public void setStartTime(Optional<LocalDateTime> startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
-    }
-
-    public void setDuration(String duration) throws FormatException {
-        this.duration = getFromStringDuration(duration);
     }
 
     public void setStartTime(String startTime) throws FormatException {
@@ -138,40 +125,27 @@ public class Task {
         return Objects.hash(name, description, id, status);
     }
 
-    protected Optional<Duration> getFromStringDuration(String duration) throws FormatException {
-        if (duration != null) {
-            try {
-                return Optional.of(Duration.between(LocalTime.MIN, LocalTime.parse(duration, TIME_FORMATTER)));
-            } catch (DateTimeException exception) {
-                throw new FormatException("Неверный формат данных");
-            }
-        }
-
-        return Optional.empty();
-    }
-
-    protected Optional<LocalDateTime> getFromStringStartTime(String startTime) throws FormatException {
+    protected LocalDateTime getFromStringStartTime(String startTime) throws FormatException {
         if (startTime != null) {
             try {
-                return Optional.of(LocalDateTime.parse(startTime, DATE_TIME_FORMATTER));
+                return LocalDateTime.parse(startTime, DATE_TIME_FORMATTER);
             } catch (DateTimeException exception) {
                 throw new FormatException("Неверный формат данных");
             }
         }
 
-        return Optional.empty();
+        return null;
     }
 
-    protected String getFromStartTimeString(Optional<LocalDateTime> startTime) {
-        return startTime.map(localDateTime -> localDateTime.format(DATE_TIME_FORMATTER)).orElse("null");
+    protected String getFromStartTimeString(LocalDateTime startTime) {
+        return startTime != null ? startTime.format(DATE_TIME_FORMATTER) : null;
     }
 
-    protected String getFromEndTimeString(Optional<LocalDateTime> endTime) {
-        return endTime.map(localDateTime -> localDateTime.format(DATE_TIME_FORMATTER)).orElse("null");
+    protected String getFromEndTimeString(LocalDateTime endTime) {
+        return endTime != null ? endTime.format(DATE_TIME_FORMATTER) : null;
     }
 
-    protected String getFromDurationString(Optional<Duration> duration) {
-        return duration.map(value -> LocalTime.of(value.toHoursPart(), value.toMinutesPart())
-                        .format(TIME_FORMATTER)).orElse("null");
+    protected String getFromDurationString(long duration) {
+        return Long.toString(duration);
     }
 }

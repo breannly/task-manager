@@ -180,11 +180,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         }
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) throws ManagerSaveException, FormatException {
+    public static FileBackedTaskManager loadFromFile(File file)
+            throws ManagerSaveException, FormatException, IntersectionTimeException {
         String fileContent = ReaderFile.readFileContents(file);
         String[] arrayContent = fileContent.split(LINE_DELIMITER);
         int length = arrayContent.length;
-        String history = history = arrayContent[length - 1];
+        String history = arrayContent[length - 1];
         String[] arrayTaskContent = Arrays.copyOfRange(arrayContent, 1, length - 2);
 
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
@@ -208,40 +209,36 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return fileBackedTaskManager;
     }
 
-    private Task fromString(String value) throws ManagerSaveException, FormatException {
+    private void fromString(String value)
+            throws ManagerSaveException, FormatException, IntersectionTimeException {
         String[] data = value.split(VALUE_DELIMITER);
-        return addTask(TaskType.valueOf(data[1]), data);
+        addTask(TaskType.valueOf(data[1]), data);
     }
 
-    private Task addTask(TaskType type, String[] data) throws ManagerSaveException, FormatException {
+    private void addTask(TaskType type, String[] data)
+            throws ManagerSaveException, FormatException, IntersectionTimeException {
         switch (type) {
             case TASK:
-                Task task = new Task(data[2], data[4], data[3], checkData(data[5]), checkData(data[6]));
+                Task task = new Task(data[2], data[4], data[3], Long.parseLong(data[5]), checkData(data[6]));
                 task.setId(Long.parseLong(data[0]));
-                getTasks().put(task.getId(), task);
-                return task;
+                addTask(task);
+                return;
             case EPIC:
                 Epic epic = new Epic(data[2], data[4]);
                 epic.setId(Long.parseLong(data[0]));
                 epic.setStatus(data[3]);
-                getEpics().put(epic.getId(), epic);
-                return epic;
+                addEpic(epic);
+                return;
             case SUBTASK:
                 Subtask subtask = new Subtask(data[2],
                         data[4],
                         data[3],
                         Long.parseLong(data[5]),
-                        checkData(data[6]),
+                        Long.parseLong(data[6]),
                         checkData(data[7]));
                 subtask.setId(Long.parseLong(data[0]));
-                Epic epicById = getEpics().get(Long.parseLong(data[5]));
-                epicById.getSubtask().put(subtask.getId(), subtask);
-                checkStatus(epicById);
-                getSubtasks().put(subtask.getId(), subtask);
-                checkEndTimeEpic(epicById);
-                return subtask;
+                addSubtask(subtask);
         }
-        return null;
     }
 
     private String checkData(String data) {

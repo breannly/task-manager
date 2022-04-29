@@ -8,12 +8,7 @@ import java.util.Objects;
 public class Subtask extends Task {
     private final Long IdEpic;
 
-    public Subtask(String name, String description, String status, Long IdEpic) {
-        super(name, description, status);
-        this.IdEpic = IdEpic;
-    }
-
-    public Subtask(String name, String description, String status, Long IdEpic, String duration, String startTime)
+    public Subtask(String name, String description, String status, Long IdEpic, long duration, String startTime)
             throws FormatException {
         super(name, description, status, duration, startTime);
         this.IdEpic = IdEpic;

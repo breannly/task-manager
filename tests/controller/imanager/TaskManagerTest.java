@@ -10,7 +10,6 @@ import model.entity.Task;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import java.util.List;
 import java.util.Set;
@@ -28,7 +27,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task task = new Task("test",
                 "test",
                 "NEW",
-                null,
+                0,
                 null);
         taskManager.addTask(task);
 
@@ -36,16 +35,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         Assertions.assertEquals(1, tasks.size(), "Неверное количество задач");
         Assertions.assertEquals(task, tasks.get(0), "Задачи не совпадают");
-    }
-
-    @Test
-    public void shouldNotAddTaskIfUseNotTask() throws ManagerSaveException, IntersectionTimeException {
-        Epic epic = new Epic("test", "test");
-        taskManager.addTask(epic);
-
-        final List<Task> tasks = taskManager.getTasksList();
-
-        Assertions.assertEquals(0, tasks.size(), "Список не пуст");
     }
 
     @Test
@@ -68,7 +57,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "test",
                 "NEW",
                 epic.getId(),
-                null,
+                0,
                 null);
         taskManager.addSubtask(subtask);
 
@@ -92,7 +81,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task task = new Task("test",
                 "test",
                 "NEW",
-                null,
+                0,
                 null);
         taskManager.addTask(task);
 
@@ -138,7 +127,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "test",
                 "NEW",
                 epic.getId(),
-                null,
+                0,
                 null);
         taskManager.addSubtask(subtask);
 
@@ -165,9 +154,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task task1 = new Task("test",
                 "test",
                 "NEW",
-                null,
+                0,
                 null);
-        Task task2 = new Task("test", "test", "NEW");
+        Task task2 = new Task("test", "test", "NEW", 0, null);
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         taskManager.deleteTasks();
@@ -216,13 +205,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "test",
                 "DONE",
                 epic.getId(),
-                null,
+                0,
                 null);
         Subtask subtask2 = new Subtask("test",
                 "test",
                 "NEW",
                 epic.getId(),
-                null,
+                0,
                 null);
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
@@ -240,7 +229,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task task = new Task("test",
                 "test",
                 "NEW",
-                null,
+                0,
                 null);
         taskManager.addTask(task);
         Task foundTask = taskManager.getTaskById(task.getId());
@@ -255,7 +244,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task task = new Task("test",
                 "test",
                 "NEW",
-                null,
+                0,
                 null);
         taskManager.addTask(task);
         Task foundTask1 = taskManager.getTaskById(2L);
@@ -298,7 +287,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "test",
                 "NEW",
                 epic.getId(),
-                null,
+                0,
                 null);
         taskManager.addSubtask(subtask);
         Subtask foundSubtask = taskManager.getSubtaskById(subtask.getId());
@@ -316,7 +305,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "test",
                 "NEW",
                 epic.getId(),
-                null,
+                0,
                 null);
         taskManager.addSubtask(subtask);
         Subtask foundSubtask1 = taskManager.getSubtaskById(3L);
@@ -333,7 +322,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         Task task = new Task("test",
                 "test",
                 "NEW",
-                null,
+                0,
                 null);
         taskManager.addTask(task);
         task.setName("test1");
@@ -363,7 +352,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "test",
                 "NEW",
                 epic.getId(),
-                null,
+                0,
                 null);
         taskManager.addSubtask(subtask);
         subtask.setName("test1");
@@ -377,8 +366,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldDeleteTaskById() throws ManagerSaveException, IntersectionTimeException, FormatException {
-        Task task1 = new Task("test", "test", "NEW", null, null);
-        Task task2 = new Task("test", "test", "NEW", null, null);
+        Task task1 = new Task("test", "test", "NEW", 0, null);
+        Task task2 = new Task("test", "test", "NEW", 0, null);
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         taskManager.deleteTaskById(task1.getId());
@@ -392,8 +381,8 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldReturnUnchangedListIfPassingNonexistentTaskId()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
-        Task task1 = new Task("test", "test", "NEW", null, null);
-        Task task2 = new Task("test", "test", "NEW", null, null);
+        Task task1 = new Task("test", "test", "NEW", 0, null);
+        Task task2 = new Task("test", "test", "NEW", 0, null);
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         taskManager.deleteTaskById(3L);
@@ -441,13 +430,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "test",
                 "IN_PROGRESS",
                 epic.getId(),
-                null,
+                0,
                 null);
         Subtask subtask2 = new Subtask("test",
                 "test",
                 "DONE",
                 epic.getId(),
-                null,
+                0,
                 null);
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
@@ -471,13 +460,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
                 "test",
                 "IN_PROGRESS",
                 epic.getId(),
-                null,
+                0,
                 null);
         Subtask subtask2 = new Subtask("test",
                 "test",
                 "DONE",
                 epic.getId(),
-                null,
+                0,
                 null);
         taskManager.addSubtask(subtask1);
         taskManager.addSubtask(subtask2);
@@ -493,14 +482,14 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldReturnSortedListByStartTime()
             throws FormatException, IntersectionTimeException, ManagerSaveException {
-        Task task1 = new Task("test", "test", "NEW", null, null);
-        Task task2 = new Task("test", "test", "NEW", "02:30", "30.04.22 12:00");
-        Task task3 = new Task("test", "test", "NEW", "02:30", "29.04.22 21:00");
+        Task task1 = new Task("test", "test", "NEW", 0, null);
+        Task task2 = new Task("test", "test", "NEW", 90, "30.04.22 12:00");
+        Task task3 = new Task("test", "test", "NEW", 90, "29.04.22 21:00");
         taskManager.addTask(task1);
         taskManager.addTask(task2);
         taskManager.addTask(task3);
         Set<Task> sortedTasks = taskManager.getPrioritizedTasks();
-        Task[] tasks = sortedTasks.toArray(new Task[sortedTasks.size()]);
+        Task[] tasks = sortedTasks.toArray(new Task[0]);
 
         Assertions.assertEquals(task3, tasks[0], "Первый элемент не совпадает");
         Assertions.assertEquals(task2, tasks[1], "Второй элемент не совпадает");

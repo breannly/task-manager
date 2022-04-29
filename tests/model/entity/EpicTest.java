@@ -32,19 +32,19 @@ class EpicTest {
                 "test",
                 "NEW",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         Subtask testSubtask2 = new Subtask("test",
                 "test",
                 "NEW",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         Subtask testSubtask3 = new Subtask("test",
                 "test",
                 "NEW",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         manager.addSubtask(testSubtask1);
         manager.addSubtask(testSubtask2);
@@ -60,19 +60,19 @@ class EpicTest {
                 "test",
                 "DONE",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         Subtask testSubtask2 = new Subtask("test",
                 "test",
                 "DONE",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         Subtask testSubtask3 = new Subtask("test",
                 "test",
                 "DONE",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         manager.addSubtask(testSubtask1);
         manager.addSubtask(testSubtask2);
@@ -88,19 +88,19 @@ class EpicTest {
                 "test",
                 "IN_PROGRESS",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         Subtask testSubtask2 = new Subtask("test",
                 "test",
                 "IN_PROGRESS",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         Subtask testSubtask3 = new Subtask("test",
                 "test",
                 "IN_PROGRESS",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         manager.addSubtask(testSubtask1);
         manager.addSubtask(testSubtask2);
@@ -116,19 +116,19 @@ class EpicTest {
                 "test",
                 "NEW",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         Subtask testSubtask2 = new Subtask("test",
                 "test",
                 "DONE",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         Subtask testSubtask3 = new Subtask("test",
                 "test",
                 "DONE",
                 testEpic.getId(),
-                null,
+                0,
                 null);
         manager.addSubtask(testSubtask1);
         manager.addSubtask(testSubtask2);

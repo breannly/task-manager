@@ -24,22 +24,7 @@ class TaskTest {
                 new Executable() {
                     @Override
                     public void execute() throws Throwable {
-                        Task task = new Task("test", "test", "NEW", null, " ");
-                    }
-                }
-        );
-
-        Assertions.assertEquals("Неверный формат данных", exception.getMessage());
-    }
-
-    @Test
-    public void shouldThrowFormatExceptionWhenIncorrectFormatEndTime() throws FormatException {
-        final FormatException exception = Assertions.assertThrows(
-                FormatException.class,
-                new Executable() {
-                    @Override
-                    public void execute() throws Throwable {
-                        Task task = new Task("test", "test", "NEW", " ", null);
+                        Task task = new Task("test", "test", "NEW", 0, " ");
                     }
                 }
         );
@@ -57,7 +42,7 @@ class TaskTest {
                         Task task = new Task("test",
                                 "test",
                                 "NEW",
-                                "00:20",
+                                20,
                                 "29.04.22 12:00");
                         manager.addTask(task);
                         Epic epic = new Epic("test", "test");
@@ -66,7 +51,7 @@ class TaskTest {
                                 "test",
                                 "NEW",
                                 epic.getId(),
-                                "00:30",
+                                30,
                                 "29.04.22 12:19");
                         manager.addSubtask(subtask);
                     }
@@ -86,7 +71,7 @@ class TaskTest {
                         Task task = new Task("test",
                                 "test",
                                 "NEW",
-                                "00:20",
+                                20,
                                 "29.04.22 12:00");
                         manager.addTask(task);
                         Epic epic = new Epic("test", "test");
@@ -95,7 +80,7 @@ class TaskTest {
                                 "test",
                                 "NEW",
                                 epic.getId(),
-                                "00:20",
+                                20,
                                 "29.04.22 11:30");
                         manager.addSubtask(subtask);
                         subtask.setStartTime("29.04.22 12:19");

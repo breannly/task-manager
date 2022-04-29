@@ -2,23 +2,20 @@ package model.entity;
 
 import model.enums.TaskType;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Optional;
 
 public class Epic extends Task {
     private final HashMap<Long, Subtask> subtasks;
-    private Optional<LocalDateTime> endTime;
+    private LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
-        setDuration(Optional.empty());
-        setStartTime(Optional.empty());
-        setEndTime(Optional.empty());
         subtasks = new HashMap<>();
     }
 
-    public void setEndTime(Optional<LocalDateTime> endTime) {
+    public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
     }
 
@@ -30,11 +27,8 @@ public class Epic extends Task {
         subtasks.put(subtask.getId(), subtask);
     }
 
-    public Optional<LocalDateTime> getEndTime() {
-        if (endTime.isPresent() && getDuration().isPresent())
-            return Optional.ofNullable(endTime.get().plus(getDuration().get()));
-        else
-            return Optional.empty();
+    public LocalDateTime getEndTime() {
+        return endTime != null ? endTime.plus(Duration.ofMinutes(getDuration())) : null;
     }
 
     @Override

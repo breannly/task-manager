@@ -21,7 +21,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     public void shouldSaveTasksAndHistoryToFile()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager manager = new FileBackedTaskManager(file);
-        Task task = new Task("test", "test","NEW", null, null);
+        Task task = new Task("test", "test","NEW", 0, null);
         manager.addTask(task);
         Epic epic = new Epic("test", "test");
         manager.addEpic(epic);
@@ -29,16 +29,16 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
                 "test",
                 "NEW",
                 epic.getId(),
-                null,
+                0,
                 null);
         manager.addSubtask(subtask);
         manager.getTaskById(task.getId());
         manager.getSubtaskById(subtask.getId());
         String expected =
                 "id,type,name,status,description,epic,duration,startTime,endTime\n" +
-                "1,TASK,test,NEW,test,null,null,null\n" +
-                "2,EPIC,test,NEW,test,null,null,null\n" +
-                "3,SUBTASK,test,NEW,test,2,null,null,null\n" +
+                "1,TASK,test,NEW,test,0,null,null\n" +
+                "2,EPIC,test,NEW,test,0,null,null\n" +
+                "3,SUBTASK,test,NEW,test,2,0,null,null\n" +
                 "\n" +
                 "1,3";
         String actual = ReaderFile.readFileContents(file);
@@ -46,6 +46,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         Assertions.assertTrue(file.exists(), "Файл не создался");
         Assertions.assertEquals(expected, actual, "Значения не совпадают");
         Assertions.assertEquals(2,manager.getHistory().size(), "Значения не совпадают");
+        Assertions.assertEquals(2,manager.getPrioritizedTasks().size(), "Значения не совпадают");
         Assertions.assertTrue(file.delete(), "Файл не удалился");
     }
 
@@ -53,11 +54,11 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     public void shouldSaveTasksToFileWithoutHistoryToFile()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager manager = new FileBackedTaskManager(file);
-        Task task = new Task("test", "test", "NEW", null, null);
+        Task task = new Task("test", "test", "NEW", 0, null);
         manager.addTask(task);
         String expected =
                 "id,type,name,status,description,epic,duration,startTime,endTime\n" +
-                "1,TASK,test,NEW,test,null,null,null\n" +
+                "1,TASK,test,NEW,test,0,null,null\n" +
                 "\n" +
                 " ";
 
@@ -75,7 +76,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         manager.addEpic(epic);
         String expected =
                 "id,type,name,status,description,epic,duration,startTime,endTime\n" +
-                "1,EPIC,test,NEW,test,null,null,null\n" +
+                "1,EPIC,test,NEW,test,0,null,null\n" +
                 "\n" +
                 " ";
         String actual = ReaderFile.readFileContents(file);
@@ -89,7 +90,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     public void shouldLoadTasksAndHistoryFromFile()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager generalManager = new FileBackedTaskManager(file);
-        Task task = new Task("test", "test","NEW",null,null);
+        Task task = new Task("test", "test","NEW",0,null);
         generalManager.addTask(task);
         Epic epic = new Epic("test", "test");
         generalManager.addEpic(epic);
@@ -97,13 +98,13 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
                 "test",
                 "DONE",
                 epic.getId(),
-                null,
+                0,
                 null);
         Subtask subtask2 = new Subtask("test",
                 "test",
                 "IN_PROGRESS",
                 epic.getId(),
-                null,
+                0,
                 null);
         generalManager.addSubtask(subtask1);
         generalManager.addSubtask(subtask2);
@@ -111,11 +112,12 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         TaskManager manager = FileBackedTaskManager.loadFromFile(file);
 
         Assertions.assertTrue(file.exists(), "Файл не создался");
-        Assertions.assertEquals(task, manager.getTasksList().get(0), "Task не восстановился");
-        Assertions.assertEquals(epic, manager.getEpicsList().get(0), "Epic не восстановился");
+        Assertions.assertEquals(1, manager.getTasksList().size(), "Task не восстановился");
+        Assertions.assertEquals(1, manager.getEpicsList().size(), "Epic не восстановился");
         Assertions.assertEquals(2, manager.getSubtasksList().size(), "Subtaskи не восстановился");
         Assertions.assertEquals("IN_PROGRESS", epic.getStatus(), "Статус не изменился");
-        Assertions.assertEquals(1L, manager.getHistory().get(0).getId(), "История не восстановилась");
+        Assertions.assertEquals(1, manager.getHistory().size(), "История не восстановилась");
+        Assertions.assertEquals(3, manager.getPrioritizedTasks().size());
         Assertions.assertTrue(file.delete(), "Файл не удалился");
     }
 
@@ -123,7 +125,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     public void shouldLoadTasksWithoutHistoryFromFile()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager generalManager = new FileBackedTaskManager(file);
-        Task task = new Task("test", "test","NEW", null, null);
+        Task task = new Task("test", "test","NEW", 0, null);
         generalManager.addTask(task);
         TaskManager manager = FileBackedTaskManager.loadFromFile(file);
 
