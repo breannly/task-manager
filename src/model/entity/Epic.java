@@ -41,7 +41,7 @@ public class Epic extends Task {
     public String toString() {
         String durationString = getFromDurationString(getDuration());
         String startTimeString = getFromStartTimeString(getStartTime());
-        String endTimeString = getFromEndTimeString(endTime);
+        String endTimeString = getFromEndTimeString(getEndTime());
 
         return String.join(",",
                 getId().toString(),
