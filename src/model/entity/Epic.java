@@ -5,6 +5,7 @@ import model.enums.TaskType;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Epic extends Task {
     private final HashMap<Long, Subtask> subtasks;
@@ -19,7 +20,7 @@ public class Epic extends Task {
         this.endTime = endTime;
     }
 
-    public HashMap<Long, Subtask> getSubtask() {
+    public Map<Long, Subtask> getSubtask() {
         return subtasks;
     }
 
@@ -27,6 +28,7 @@ public class Epic extends Task {
         subtasks.put(subtask.getId(), subtask);
     }
 
+    @Override
     public LocalDateTime getEndTime() {
         return endTime != null ? endTime.plus(Duration.ofMinutes(getDuration())) : null;
     }

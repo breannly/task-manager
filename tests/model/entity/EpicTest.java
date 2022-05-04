@@ -14,19 +14,19 @@ class EpicTest {
     private static Epic testEpic;
 
     @BeforeEach
-    public void beforeAll() throws ManagerSaveException, IntersectionTimeException {
+    void beforeAll() throws ManagerSaveException, IntersectionTimeException {
         manager = Managers.getDefault();
         testEpic = new Epic("test", "test");
         manager.addEpic(testEpic);
     }
 
     @Test
-    public void shouldReturnNEWStatusWhenNoOneSubtasks() {
+    void shouldReturnNEWStatusWhenNoOneSubtasks() {
         Assertions.assertEquals("NEW", testEpic.getStatus());
     }
 
     @Test
-    public void shouldReturnNEWStatusWhenAllSubtasksStatusAreNEW()
+    void shouldReturnNEWStatusWhenAllSubtasksStatusAreNEW()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         Subtask testSubtask1 = new Subtask("test",
                 "test",
@@ -54,7 +54,7 @@ class EpicTest {
     }
 
     @Test
-    public void shouldReturnDONEStatusWhenAllSubtasksStatusAreDONE()
+    void shouldReturnDONEStatusWhenAllSubtasksStatusAreDONE()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         Subtask testSubtask1 = new Subtask("test",
                 "test",
@@ -82,7 +82,7 @@ class EpicTest {
     }
 
     @Test
-    public void shouldReturnINPROGRESSStatusWhenAllSubtasksStatusAreINPROGRESS()
+    void shouldReturnINPROGRESSStatusWhenAllSubtasksStatusAreINPROGRESS()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         Subtask testSubtask1 = new Subtask("test",
                 "test",
@@ -110,7 +110,7 @@ class EpicTest {
     }
 
     @Test
-    public void shouldReturnINPROGRESSSTATUSWhenAllSubtasksStatusAreNEWAndDONE()
+    void shouldReturnINPROGRESSSTATUSWhenAllSubtasksStatusAreNEWAndDONE()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         Subtask testSubtask1 = new Subtask("test",
                 "test",

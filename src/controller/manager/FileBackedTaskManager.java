@@ -4,7 +4,6 @@ import controller.exception.FormatException;
 import controller.exception.IntersectionTimeException;
 import controller.exception.ManagerSaveException;
 import controller.imanager.HistoryManager;
-import controller.imanager.TaskManager;
 import controller.utility.Managers;
 import controller.utility.ReaderFile;
 import model.entity.Epic;
@@ -13,13 +12,14 @@ import model.entity.Task;
 import model.enums.TaskType;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class FileBackedTaskManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTaskManager extends InMemoryTaskManager {
     private static final String LINE_DELIMITER = "\n";
     private static final String VALUE_DELIMITER = ",";
 
@@ -158,7 +158,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
 
     private void save() throws ManagerSaveException {
 
-        try (Writer fileWriter = new OutputStreamWriter(new FileOutputStream(file.getPath()), "UTF8")) {
+        try (Writer fileWriter = new OutputStreamWriter(new FileOutputStream(file.getPath()), StandardCharsets.UTF_8)) {
             if (!Files.exists(Path.of(file.getPath()))) throw new ManagerSaveException();
             HistoryManager historyManager = Managers.getDefaultHistory();
             var sb = new StringBuilder();

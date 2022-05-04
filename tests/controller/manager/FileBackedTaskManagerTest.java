@@ -18,7 +18,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     File file = new File("test.csv");
 
     @Test
-    public void shouldSaveTasksAndHistoryToFile()
+    void shouldSaveTasksAndHistoryToFile()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager manager = new FileBackedTaskManager(file);
         Task task = new Task("test", "test","NEW", 0, null);
@@ -51,7 +51,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldSaveTasksToFileWithoutHistoryToFile()
+    void shouldSaveTasksToFileWithoutHistoryToFile()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager manager = new FileBackedTaskManager(file);
         Task task = new Task("test", "test", "NEW", 0, null);
@@ -70,7 +70,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldSaveEpicWithoutSubtasksToFile() throws ManagerSaveException, IntersectionTimeException {
+    void shouldSaveEpicWithoutSubtasksToFile() throws ManagerSaveException, IntersectionTimeException {
         TaskManager manager = new FileBackedTaskManager(file);
         Epic epic = new Epic("test", "test");
         manager.addEpic(epic);
@@ -87,7 +87,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldLoadTasksAndHistoryFromFile()
+    void shouldLoadTasksAndHistoryFromFile()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager generalManager = new FileBackedTaskManager(file);
         Task task = new Task("test", "test","NEW",0,null);
@@ -122,7 +122,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldLoadTasksWithoutHistoryFromFile()
+    void shouldLoadTasksWithoutHistoryFromFile()
             throws ManagerSaveException, IntersectionTimeException, FormatException {
         TaskManager generalManager = new FileBackedTaskManager(file);
         Task task = new Task("test", "test","NEW", 0, null);
@@ -136,7 +136,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     }
 
     @Test
-    public void shouldLoadEpicWithoutSubtasksFromFile()
+    void shouldLoadEpicWithoutSubtasksFromFile()
             throws ManagerSaveException, FormatException, IntersectionTimeException {
         TaskManager generalManager = new FileBackedTaskManager(file);
         Epic epic = new Epic("test", "test");

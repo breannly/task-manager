@@ -19,7 +19,7 @@ class HistoryManagerTest {
     private Subtask subtask;
 
     @BeforeEach
-    public void beforeEach() throws FormatException {
+    void beforeEach() throws FormatException {
         historyManager = new InMemoryHistoryManager();
         task = new Task("test", "test", "NEW", 0, null);
         task.setId(1L);
@@ -35,7 +35,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    public void shouldAdd() {
+    void shouldAdd() {
         historyManager.add(task);
 
         final List<Task> history = historyManager.getHistory();
@@ -45,7 +45,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    public void shouldAddWithoutRepetitions() {
+    void shouldAddWithoutRepetitions() {
         historyManager.add(task);
         historyManager.add(epic);
         historyManager.add(subtask);
@@ -59,7 +59,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    public void shouldNotRemoveAnythingWhenTheListIsEmpty() {
+    void shouldNotRemoveAnythingWhenTheListIsEmpty() {
         historyManager.remove(task.getId());
 
         final List<Task> history = historyManager.getHistory();
@@ -68,7 +68,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    public void shouldRemoveFirstElement() {
+    void shouldRemoveFirstElement() {
         historyManager.add(task);
         historyManager.add(epic);
         historyManager.add(subtask);
@@ -82,7 +82,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    public void shouldRemoveMiddleElement() {
+    void shouldRemoveMiddleElement() {
         historyManager.add(task);
         historyManager.add(epic);
         historyManager.add(subtask);
@@ -96,7 +96,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    public void shouldRemoveLastElement() {
+    void shouldRemoveLastElement() {
         historyManager.add(task);
         historyManager.add(epic);
         historyManager.add(subtask);
@@ -110,7 +110,7 @@ class HistoryManagerTest {
     }
 
     @Test
-    public void shouldReturnEmptyListWhenEmptyTaskHistory() {
+    void shouldReturnEmptyListWhenEmptyTaskHistory() {
         final List<Task> history = new ArrayList<>();
 
         Assertions.assertEquals(0, history.size(), "Список не пуст");

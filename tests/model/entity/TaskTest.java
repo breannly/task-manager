@@ -13,12 +13,12 @@ class TaskTest {
     private static TaskManager manager;
 
     @BeforeEach
-    public void beforeEach() {
+    void beforeEach() {
         manager = Managers.getDefault();
     }
 
     @Test
-    public void shouldThrowFormatExceptionWhenIncorrectFormatStartTime() throws FormatException {
+    void shouldThrowFormatExceptionWhenIncorrectFormatStartTime() throws FormatException {
         final FormatException exception = Assertions.assertThrows(
                 FormatException.class,
                 new Executable() {
@@ -33,7 +33,7 @@ class TaskTest {
     }
 
     @Test
-    public void shouldThrowIntersectionTimeExceptionWhenAddIntersectionByTime() throws IntersectionTimeException {
+    void shouldThrowIntersectionTimeExceptionWhenAddIntersectionByTime() throws IntersectionTimeException {
         final IntersectionTimeException exception = Assertions.assertThrows(
                 IntersectionTimeException.class,
                 new Executable() {
@@ -62,7 +62,7 @@ class TaskTest {
     }
 
     @Test
-    public void shouldThrowIntersectionTimeExceptionWhenUpdateIntersectionByTime() throws IntersectionTimeException {
+    void shouldThrowIntersectionTimeExceptionWhenUpdateIntersectionByTime() throws IntersectionTimeException {
         final IntersectionTimeException exception = Assertions.assertThrows(
                 IntersectionTimeException.class,
                 new Executable() {

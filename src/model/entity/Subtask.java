@@ -6,16 +6,16 @@ import model.enums.TaskType;
 import java.util.Objects;
 
 public class Subtask extends Task {
-    private final Long IdEpic;
+    private final Long idEpic;
 
-    public Subtask(String name, String description, String status, Long IdEpic, long duration, String startTime)
+    public Subtask(String name, String description, String status, Long idEpic, long duration, String startTime)
             throws FormatException {
         super(name, description, status, duration, startTime);
-        this.IdEpic = IdEpic;
+        this.idEpic = idEpic;
     }
 
     public Long getIdEpic() {
-        return IdEpic;
+        return idEpic;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Subtask extends Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Subtask subtask = (Subtask) o;
-        return getId() == subtask.getId()
+        return getId().equals(subtask.getId())
                 && Objects.equals(getName(), subtask.getName())
                 && Objects.equals(getDescription(), subtask.getDescription())
                 && Objects.equals(getStatus(), subtask.getStatus())
