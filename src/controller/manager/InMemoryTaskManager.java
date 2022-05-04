@@ -237,22 +237,27 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateTask(Task task) throws ManagerSaveException, IntersectionTimeException {
-        checkIntersectionTime(task);
-        tasks.put(task.getId(), task);
+        if (tasks.containsKey(task.getId())) {
+            checkIntersectionTime(task);
+            tasks.put(task.getId(), task);
+        }
     }
 
     @Override
     public void updateEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException {
-        epics.put(epic.getId(), epic);
+        if (epics.containsKey(epic.getId()))
+            epics.put(epic.getId(), epic);
     }
 
     @Override
     public void updateSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
-        checkIntersectionTime(subtask);
-        subtasks.put(subtask.getId(), subtask);
-        Epic epic = getEpicById(subtask.getIdEpic());
-        checkStatus(epic);
-        checkEndTimeEpic(epic);
+        if (subtasks.containsKey(subtask.getId())) {
+            checkIntersectionTime(subtask);
+            subtasks.put(subtask.getId(), subtask);
+            Epic epic = getEpicById(subtask.getIdEpic());
+            checkStatus(epic);
+            checkEndTimeEpic(epic);
+        }
     }
 
     @Override
