@@ -20,13 +20,13 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Long, Epic> epics;
     private final Set<Task> sortedByStartTimeTasks;
     private final HistoryManager historyManager;
-    private static IdGenerator idGenerator;
+    private final IdGenerator idGenerator;
 
     public InMemoryTaskManager() {
         tasks = new HashMap<>();
         subtasks = new HashMap<>();
         epics = new HashMap<>();
-        sortedByStartTimeTasks = new TreeSet<Task>(startTimeComparator);
+        sortedByStartTimeTasks = new TreeSet<>(startTimeComparator);
         historyManager = Managers.getDefaultHistory();
         idGenerator = new IdGenerator();
     }
@@ -200,7 +200,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTaskById(Long id) throws ManagerSaveException {
         if (!tasks.isEmpty()) {
             for (Long ID : tasks.keySet()) {
-                if (ID == id) {
+                if (ID.equals(id)) {
                     historyManager.add(tasks.get(id));
                     return tasks.get(id);
                 }
@@ -213,7 +213,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicById(Long id) throws ManagerSaveException {
         if (!epics.isEmpty()) {
             for (Long ID : epics.keySet()) {
-                if (ID == id) {
+                if (ID.equals(id)) {
                     historyManager.add(epics.get(id));
                     return epics.get(id);
                 }
@@ -226,7 +226,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Subtask getSubtaskById(Long id) throws ManagerSaveException {
         if (!subtasks.isEmpty()) {
             for (Long ID : subtasks.keySet()) {
-                if (ID == id) {
+                if (ID.equals(id)) {
                     historyManager.add(subtasks.get(id));
                     return subtasks.get(id);
                 }
