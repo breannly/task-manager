@@ -104,6 +104,10 @@ public class KVServer {
         server.start();
     }
 
+    public void close() {
+        server.stop(1);
+    }
+
     private String generateApiKey() {
         return "" + System.currentTimeMillis();
     }
@@ -123,4 +127,5 @@ public class KVServer {
         h.sendResponseHeaders(200, resp.length);
         h.getResponseBody().write(resp);
     }
+
 }
