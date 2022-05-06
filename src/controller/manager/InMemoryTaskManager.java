@@ -4,7 +4,7 @@ import controller.exception.IntersectionTimeException;
 import controller.exception.ManagerSaveException;
 import controller.imanager.HistoryManager;
 import controller.imanager.TaskManager;
-import generator.IdGenerator;
+import controller.generator.IdGenerator;
 import model.enums.StatusType;
 import controller.utility.Managers;
 import model.entity.Epic;

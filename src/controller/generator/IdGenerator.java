@@ -1,4 +1,4 @@
-package controller.manager;
+package controller.generator;
 
 public class IdGenerator {
     private Long id;
