@@ -58,10 +58,7 @@ public class Task {
     }
 
     public LocalDateTime getEndTime() {
-        if (startTime != null)
-            return startTime.plus(Duration.ofMinutes(duration));
-        else
-            return null;
+        return startTime != null ? startTime.plus(Duration.ofMinutes(duration)) : null;
     }
 
     public void setId(Long id) {
@@ -114,10 +111,7 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(name, task.name)
-                && Objects.equals(description, task.description)
-                && Objects.equals(id, task.id)
-                && Objects.equals(status, task.status);
+        return id.equals(task.getId());
     }
 
     @Override

@@ -122,9 +122,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     Comparator<Task> startTimeComparator = (o1, o2) -> {
+        if (o1.equals(o2)) return 0;
+
         if (o1.getStartTime() == null) {
             return (o2.getStartTime() == null) ? -1 : 1;
         }
+
         if (o2.getStartTime() == null) {
             return -1;
         }
@@ -239,6 +242,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(Task task) throws ManagerSaveException, IntersectionTimeException {
         if (tasks.containsKey(task.getId())) {
             checkIntersectionTime(task);
+            sortedByStartTimeTasks.remove(task);
+            sortedByStartTimeTasks.add(task);
             tasks.put(task.getId(), task);
         }
     }
@@ -253,6 +258,8 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
         if (subtasks.containsKey(subtask.getId())) {
             checkIntersectionTime(subtask);
+            sortedByStartTimeTasks.remove(subtask);
+            sortedByStartTimeTasks.add(subtask);
             subtasks.put(subtask.getId(), subtask);
             Epic epic = getEpicById(subtask.getIdEpic());
             checkStatus(epic);
@@ -262,10 +269,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task addTask(Task task) throws ManagerSaveException, IntersectionTimeException {
+        checkIntersectionTime(task);
         if (task.getId() == null) {
             task.setId(idGenerator.generateID());
         }
-        checkIntersectionTime(task);
         sortedByStartTimeTasks.add(task);
         tasks.put(task.getId(), task);
 
@@ -285,10 +292,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask addSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
+        checkIntersectionTime(subtask);
         if (subtask.getId() == null) {
             subtask.setId(idGenerator.generateID());
         }
-        checkIntersectionTime(subtask);
         sortedByStartTimeTasks.add(subtask);
         Epic epic = epics.get(subtask.getIdEpic());
         epic.addSubtask(subtask);
@@ -302,7 +309,8 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(Long id) throws ManagerSaveException {
         if (tasks.containsKey(id)) {
-            sortedByStartTimeTasks.remove(getTaskById(id));
+            Task task = getTaskById(id);
+            sortedByStartTimeTasks.remove(task);
             historyManager.remove(id);
             tasks.remove(id);
         }
