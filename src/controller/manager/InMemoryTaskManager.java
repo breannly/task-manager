@@ -4,12 +4,14 @@ import controller.exception.IntersectionTimeException;
 import controller.exception.ManagerSaveException;
 import controller.imanager.HistoryManager;
 import controller.imanager.TaskManager;
+import generator.IdGenerator;
 import model.enums.StatusType;
 import controller.utility.Managers;
 import model.entity.Epic;
 import model.entity.Subtask;
 import model.entity.Task;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -150,7 +152,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteTasks() throws ManagerSaveException {
+    public void deleteTasks() throws ManagerSaveException, IOException, InterruptedException {
         if (!tasks.isEmpty()) {
             deleteTasksFromPrioritizedSet(tasks.values());
             removeTasksFromHistory(tasks.values());
@@ -169,7 +171,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteSubtasks() throws ManagerSaveException {
+    public void deleteSubtasks() throws ManagerSaveException, IOException, InterruptedException {
         if (!subtasks.isEmpty()) {
             deleteSubtasksFromPrioritizedSet(subtasks.values());
             deleteAllSubtasksFromEpics(epics.values());
@@ -190,7 +192,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteEpics() throws ManagerSaveException {
+    public void deleteEpics() throws ManagerSaveException, IOException, InterruptedException {
         if (!epics.isEmpty()) {
             deleteSubtasksFromPrioritizedSet(subtasks.values());
             removeTasksFromHistory(epics.values());
@@ -200,7 +202,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(Long id) throws ManagerSaveException {
+    public Task getTaskById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         if (!tasks.isEmpty()) {
             for (Long ID : tasks.keySet()) {
                 if (ID.equals(id)) {
@@ -213,7 +215,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpicById(Long id) throws ManagerSaveException {
+    public Epic getEpicById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         if (!epics.isEmpty()) {
             for (Long ID : epics.keySet()) {
                 if (ID.equals(id)) {
@@ -226,7 +228,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask getSubtaskById(Long id) throws ManagerSaveException {
+    public Subtask getSubtaskById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         if (!subtasks.isEmpty()) {
             for (Long ID : subtasks.keySet()) {
                 if (ID.equals(id)) {
@@ -239,7 +241,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) throws ManagerSaveException, IntersectionTimeException {
+    public void updateTask(Task task) throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         if (tasks.containsKey(task.getId())) {
             checkIntersectionTime(task);
             sortedByStartTimeTasks.remove(task);
@@ -249,13 +251,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException {
+    public void updateEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         if (epics.containsKey(epic.getId()))
             epics.put(epic.getId(), epic);
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
+    public void updateSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         if (subtasks.containsKey(subtask.getId())) {
             checkIntersectionTime(subtask);
             sortedByStartTimeTasks.remove(subtask);
@@ -268,7 +270,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task addTask(Task task) throws ManagerSaveException, IntersectionTimeException {
+    public Task addTask(Task task) throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         checkIntersectionTime(task);
         if (task.getId() == null) {
             task.setId(idGenerator.generateID());
@@ -280,7 +282,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic addEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException {
+    public Epic addEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         if (epic.getId() == null) {
             epic.setId(idGenerator.generateID());
             checkStatus(epic);
@@ -291,7 +293,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask addSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
+    public Subtask addSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         checkIntersectionTime(subtask);
         if (subtask.getId() == null) {
             subtask.setId(idGenerator.generateID());
@@ -307,7 +309,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteTaskById(Long id) throws ManagerSaveException {
+    public void deleteTaskById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         if (tasks.containsKey(id)) {
             Task task = getTaskById(id);
             sortedByStartTimeTasks.remove(task);
@@ -317,7 +319,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteEpicById(Long id) throws ManagerSaveException {
+    public void deleteEpicById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         if (epics.containsKey(id)) {
             Collection<Subtask> subtaskCollection = getEpicById(id).getSubtask().values();
             deleteSubtasksFromPrioritizedSet(subtaskCollection);
@@ -333,7 +335,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void deleteSubtaskById(Long id) throws ManagerSaveException {
+    public void deleteSubtaskById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         if (subtasks.containsKey(id)) {
             Subtask subtask = getSubtaskById(id);
             Epic epic = getEpicById(subtask.getIdEpic());

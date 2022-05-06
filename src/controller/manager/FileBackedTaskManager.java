@@ -29,46 +29,33 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         this.file = file;
     }
 
-    @Override
-    public List<Task> getTasksList() {
-        return super.getTasksList();
+    public FileBackedTaskManager(String fileName) {
+        file = new File(fileName);
     }
 
     @Override
-    public List<Subtask> getSubtasksList() {
-        return super.getSubtasksList();
-    }
-
-    @Override
-    public List<Epic> getEpicsList() {
-        return super.getEpicsList();
-    }
-
-    @Override
-    public Set<Task> getPrioritizedTasks() {
-        return super.getPrioritizedTasks();
-    }
-
-    @Override
-    public void deleteTasks() throws ManagerSaveException {
+    public void deleteTasks() throws ManagerSaveException, IOException, InterruptedException {
         super.deleteTasks();
         save();
     }
 
     @Override
-    public void deleteSubtasks() throws ManagerSaveException {
+    public void deleteSubtasks()
+            throws ManagerSaveException, IOException, InterruptedException {
         super.deleteSubtasks();
         save();
     }
 
     @Override
-    public void deleteEpics() throws ManagerSaveException {
+    public void deleteEpics()
+            throws ManagerSaveException, IOException, InterruptedException {
         super.deleteEpics();
         save();
     }
 
     @Override
-    public Task getTaskById(Long id) throws ManagerSaveException {
+    public Task getTaskById(Long id)
+            throws ManagerSaveException, IOException, InterruptedException {
         Task task = super.getTaskById(id);
         save();
 
@@ -76,7 +63,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Epic getEpicById(Long id) throws ManagerSaveException {
+    public Epic getEpicById(Long id)
+            throws ManagerSaveException, IOException, InterruptedException {
         Epic epic = super.getEpicById(id);
         save();
 
@@ -84,7 +72,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Subtask getSubtaskById(Long id) throws ManagerSaveException {
+    public Subtask getSubtaskById(Long id)
+            throws ManagerSaveException, IOException, InterruptedException {
         Subtask subtask = super.getSubtaskById(id);
         save();
 
@@ -92,25 +81,29 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task task) throws ManagerSaveException, IntersectionTimeException {
+    public void updateTask(Task task)
+            throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         super.updateTask(task);
         save();
     }
 
     @Override
-    public void updateEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException {
+    public void updateEpic(Epic epic)
+            throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         super.updateEpic(epic);
         save();
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
+    public void updateSubtask(Subtask subtask)
+            throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         super.updateSubtask(subtask);
         save();
     }
 
     @Override
-    public Task addTask(Task task) throws ManagerSaveException, IntersectionTimeException {
+    public Task addTask(Task task)
+            throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         super.addTask(task);
         save();
 
@@ -118,7 +111,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Epic addEpic(Epic epic) throws ManagerSaveException, IntersectionTimeException {
+    public Epic addEpic(Epic epic)
+            throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         super.addEpic(epic);
         save();
 
@@ -126,7 +120,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public Subtask addSubtask(Subtask subtask) throws ManagerSaveException, IntersectionTimeException {
+    public Subtask addSubtask(Subtask subtask)
+            throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         super.addSubtask(subtask);
         save();
 
@@ -134,19 +129,19 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void deleteTaskById(Long id) throws ManagerSaveException {
+    public void deleteTaskById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         super.deleteTaskById(id);
         save();
     }
 
     @Override
-    public void deleteEpicById(Long id) throws ManagerSaveException {
+    public void deleteEpicById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         super.deleteEpicById(id);
         save();
     }
 
     @Override
-    public void deleteSubtaskById(Long id) throws ManagerSaveException {
+    public void deleteSubtaskById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         super.deleteSubtaskById(id);
         save();
     }
@@ -156,7 +151,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return super.getHistory();
     }
 
-    private void save() throws ManagerSaveException {
+    protected void save() throws ManagerSaveException, IOException, InterruptedException {
 
         try (Writer fileWriter = new OutputStreamWriter(new FileOutputStream(file.getPath()), StandardCharsets.UTF_8)) {
             if (!Files.exists(Path.of(file.getPath()))) throw new ManagerSaveException();
@@ -181,7 +176,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     public static FileBackedTaskManager loadFromFile(File file)
-            throws ManagerSaveException, FormatException, IntersectionTimeException {
+            throws ManagerSaveException, FormatException, IntersectionTimeException, IOException, InterruptedException {
         String fileContent = ReaderFile.readFileContents(file);
         String[] arrayContent = fileContent.split(LINE_DELIMITER);
         int length = arrayContent.length;
@@ -210,13 +205,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private void fromString(String value)
-            throws ManagerSaveException, FormatException, IntersectionTimeException {
+            throws ManagerSaveException, FormatException, IntersectionTimeException, IOException, InterruptedException {
         String[] data = value.split(VALUE_DELIMITER);
         addTask(TaskType.valueOf(data[1]), data);
     }
 
     private void addTask(TaskType type, String[] data)
-            throws ManagerSaveException, FormatException, IntersectionTimeException {
+            throws ManagerSaveException, FormatException, IntersectionTimeException, IOException, InterruptedException {
         switch (type) {
             case TASK:
                 Task task = new Task(data[2], data[4], data[3], Long.parseLong(data[5]), checkData(data[6]));
