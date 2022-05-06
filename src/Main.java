@@ -1,14 +1,14 @@
-import controller.exception.ManagerSaveException;
-import controller.manager.FileBackedTaskManager;
+import controller.manager.HTTPTaskManager;
 import controller.utility.Managers;
-import controller.imanager.TaskManager;
-import model.entity.Epic;
-import model.entity.Subtask;
-import model.entity.Task;
+import server.KVServer;
 
-import java.io.File;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws ManagerSaveException {
+
+    public static void main(String[] args)
+            throws IOException {
+        new KVServer().start();
     }
 }
+
