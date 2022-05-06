@@ -2,12 +2,10 @@ package server;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
+import controller.adapter.LocalDateTimeAdapter;
 import controller.exception.IntersectionTimeException;
 import controller.exception.ManagerSaveException;
 import controller.imanager.TaskManager;
@@ -23,7 +21,6 @@ import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 
@@ -68,7 +65,7 @@ public class HttpTaskServer {
                             try {
                                 exchange.sendResponseHeaders(200, 0);
                                 out.write(server.getJsonTaskById(id).getBytes());
-                            } catch (ManagerSaveException e) {
+                            } catch (ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         }
@@ -81,14 +78,14 @@ public class HttpTaskServer {
                             try {
                                 server.manager.addTask(task);
                                 exchange.sendResponseHeaders(200, 0);
-                            } catch (IntersectionTimeException | ManagerSaveException e) {
+                            } catch (IntersectionTimeException | ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         } else {
                             try {
                                 server.manager.updateTask(task);
                                 exchange.sendResponseHeaders(200, 0);
-                            } catch (ManagerSaveException | IntersectionTimeException e) {
+                            } catch (ManagerSaveException | IntersectionTimeException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         }
@@ -98,7 +95,7 @@ public class HttpTaskServer {
                             try {
                                 server.manager.deleteTasks();
                                 exchange.sendResponseHeaders(200, 0);
-                            } catch (ManagerSaveException e) {
+                            } catch (ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         } else {
@@ -106,7 +103,7 @@ public class HttpTaskServer {
                             try {
                                 server.manager.deleteTaskById(id);
                                 exchange.sendResponseHeaders(200, 0);
-                            } catch (ManagerSaveException e) {
+                            } catch (ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         }
@@ -125,7 +122,7 @@ public class HttpTaskServer {
         return gson.fromJson(body, Task.class);
     }
 
-    private String getJsonTaskById(Long id) throws ManagerSaveException {
+    private String getJsonTaskById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         Task task = manager.getTaskById(id);
         task.setId(id);
         return gson.toJson(task);
@@ -147,7 +144,7 @@ public class HttpTaskServer {
                             try {
                                 exchange.sendResponseHeaders(200, 0);
                                 out.write(server.getJsonEpicById(id).getBytes());
-                            } catch (ManagerSaveException e) {
+                            } catch (ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         }
@@ -160,14 +157,14 @@ public class HttpTaskServer {
                             try {
                                 server.manager.addEpic(epic);
                                 exchange.sendResponseHeaders(200, 0);
-                            } catch (IntersectionTimeException | ManagerSaveException e) {
+                            } catch (IntersectionTimeException | ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         } else {
                             try {
                                 server.manager.updateEpic(epic);
                                 exchange.sendResponseHeaders(200, 0);
-                            } catch (ManagerSaveException | IntersectionTimeException e) {
+                            } catch (ManagerSaveException | IntersectionTimeException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         }
@@ -177,14 +174,14 @@ public class HttpTaskServer {
                             try {
                                 server.manager.deleteEpics();
                                 exchange.sendResponseHeaders(200, 0);
-                            } catch (ManagerSaveException e) {
+                            } catch (ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         } else {
                             Long id = Long.parseLong(exchange.getRequestURI().getRawQuery().split("\\=")[1]);
                             try {
                                 server.manager.deleteEpicById(id);
-                            } catch (ManagerSaveException e) {
+                            } catch (ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         }
@@ -202,7 +199,7 @@ public class HttpTaskServer {
         return gson.fromJson(body, Epic.class);
     }
 
-    private String getJsonEpicById(Long id) throws ManagerSaveException {
+    private String getJsonEpicById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         Epic epic = manager.getEpicById(id);
         return gson.toJson(epic);
     }
@@ -223,7 +220,7 @@ public class HttpTaskServer {
                             try {
                                 exchange.sendResponseHeaders(200, 0);
                                 out.write(server.getJsonSubtaskById(id).getBytes());
-                            } catch (ManagerSaveException e) {
+                            } catch (ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         }
@@ -236,14 +233,14 @@ public class HttpTaskServer {
                             try {
                                 server.manager.addSubtask(subtask);
                                 exchange.sendResponseHeaders(200, 0);
-                            } catch (IntersectionTimeException | ManagerSaveException e) {
+                            } catch (IntersectionTimeException | ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         } else {
                             try {
                                 server.manager.updateSubtask(subtask);
                                 exchange.sendResponseHeaders(200, 0);
-                            } catch (ManagerSaveException | IntersectionTimeException e) {
+                            } catch (ManagerSaveException | IntersectionTimeException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         }
@@ -253,14 +250,14 @@ public class HttpTaskServer {
                             try {
                                 server.manager.deleteSubtasks();
                                 exchange.sendResponseHeaders(200, 0);
-                            } catch (ManagerSaveException e) {
+                            } catch (ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         } else {
                             Long id = Long.parseLong(exchange.getRequestURI().getRawQuery().split("\\=")[1]);
                             try {
                                 server.manager.deleteSubtaskById(id);
-                            } catch (ManagerSaveException e) {
+                            } catch (ManagerSaveException | InterruptedException e) {
                                 exchange.sendResponseHeaders(400, 0);
                             }
                         }
@@ -274,7 +271,7 @@ public class HttpTaskServer {
         return gson.toJson(subtasks);
     }
 
-    private String getJsonSubtaskById(Long id) throws ManagerSaveException {
+    private String getJsonSubtaskById(Long id) throws ManagerSaveException, IOException, InterruptedException {
         Subtask subtask = manager.getSubtaskById(id);
         return gson.toJson(subtask);
     }
@@ -332,20 +329,3 @@ public class HttpTaskServer {
     }
 }
 
-class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
-
-    @Override
-    public void write(final JsonWriter jsonWriter, final LocalDateTime localDateTime) throws IOException {
-        if (localDateTime == null) {
-            jsonWriter.nullValue();
-            return;
-        }
-        jsonWriter.value(localDateTime.format(DATE_TIME_FORMATTER));
-    }
-
-    @Override
-    public LocalDateTime read(final JsonReader jsonReader) throws IOException {
-        return LocalDateTime.parse(jsonReader.nextString(), DATE_TIME_FORMATTER);
-    }
-}
