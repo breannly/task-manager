@@ -3,6 +3,7 @@ package model.entity;
 import controller.exception.FormatException;
 import controller.exception.IntersectionTimeException;
 import controller.imanager.TaskManager;
+import controller.manager.InMemoryTaskManager;
 import controller.utility.Managers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +15,7 @@ class TaskTest {
 
     @BeforeEach
     void beforeEach() {
-        manager = Managers.getDefault();
+        manager = new InMemoryTaskManager();
     }
 
     @Test

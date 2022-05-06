@@ -9,12 +9,14 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 class EpicTest {
     private static TaskManager manager;
     private static Epic testEpic;
 
     @BeforeEach
-    void beforeAll() throws ManagerSaveException, IntersectionTimeException {
+    void beforeAll() throws ManagerSaveException, IntersectionTimeException, IOException, InterruptedException {
         manager = Managers.getDefault();
         testEpic = new Epic("test", "test");
         manager.addEpic(testEpic);
@@ -27,7 +29,7 @@ class EpicTest {
 
     @Test
     void shouldReturnNEWStatusWhenAllSubtasksStatusAreNEW()
-            throws ManagerSaveException, IntersectionTimeException, FormatException {
+            throws ManagerSaveException, IntersectionTimeException, FormatException, IOException, InterruptedException {
         Subtask testSubtask1 = new Subtask("test",
                 "test",
                 "NEW",
@@ -55,7 +57,7 @@ class EpicTest {
 
     @Test
     void shouldReturnDONEStatusWhenAllSubtasksStatusAreDONE()
-            throws ManagerSaveException, IntersectionTimeException, FormatException {
+            throws ManagerSaveException, IntersectionTimeException, FormatException, IOException, InterruptedException {
         Subtask testSubtask1 = new Subtask("test",
                 "test",
                 "DONE",
@@ -83,7 +85,7 @@ class EpicTest {
 
     @Test
     void shouldReturnINPROGRESSStatusWhenAllSubtasksStatusAreINPROGRESS()
-            throws ManagerSaveException, IntersectionTimeException, FormatException {
+            throws ManagerSaveException, IntersectionTimeException, FormatException, IOException, InterruptedException {
         Subtask testSubtask1 = new Subtask("test",
                 "test",
                 "IN_PROGRESS",
@@ -111,7 +113,7 @@ class EpicTest {
 
     @Test
     void shouldReturnINPROGRESSSTATUSWhenAllSubtasksStatusAreNEWAndDONE()
-            throws ManagerSaveException, IntersectionTimeException, FormatException {
+            throws ManagerSaveException, IntersectionTimeException, FormatException, IOException, InterruptedException {
         Subtask testSubtask1 = new Subtask("test",
                 "test",
                 "NEW",
