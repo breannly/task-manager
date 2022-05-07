@@ -1,2 +1,2 @@
-# java-sprint2-hw
+# task-manager
 Second sprint homework
