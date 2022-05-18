@@ -1,5 +1,8 @@
 package controller.utility;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import controller.adapter.LocalDateTimeAdapter;
 import controller.imanager.HistoryManager;
 import controller.manager.FileBackedTaskManager;
 import controller.manager.HTTPTaskManager;
@@ -10,6 +13,7 @@ import server.KVServer;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 public class Managers {
     private static HistoryManager historyManager;
@@ -28,5 +32,11 @@ public class Managers {
             historyManager = new InMemoryHistoryManager();
         }
         return historyManager;
+    }
+
+    public static Gson getGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .create();
     }
 }

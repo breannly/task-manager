@@ -25,9 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 public class HttpTaskServer {
-    private final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-            .create();
+    private final Gson gson = Managers.getGson();
     private final TaskManager manager = Managers.getDefaultBackedFileTaskManager();
     private static final HttpTaskServer server = new HttpTaskServer();
     private static final int PORT = 8080;

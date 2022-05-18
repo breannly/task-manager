@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import controller.adapter.LocalDateTimeAdapter;
 import controller.exception.IntersectionTimeException;
 import controller.exception.ManagerSaveException;
+import controller.utility.Managers;
 import model.entity.Epic;
 import model.entity.Subtask;
 import model.entity.Task;
@@ -23,9 +24,7 @@ public class HTTPTaskManager extends FileBackedTaskManager {
     public HTTPTaskManager(String uri) throws IOException, InterruptedException {
         super(uri);
         client = new KVTaskClient(URI.create(uri));
-        gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .create();
+        gson = Managers.getGson();
     }
 
     @Override
