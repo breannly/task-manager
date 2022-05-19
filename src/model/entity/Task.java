@@ -19,19 +19,19 @@ public class Task {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
 
-    public Task(String name, String description, String status, long duration, String startTime)
-            throws FormatException {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
+    }
+
+    public Task(String name, String description, String status, long duration, String startTime)
+            throws FormatException {
+        this(name, description);
         this.status = status;
         this.duration = duration;
         this.startTime = getFromStringStartTime(startTime);
     }
 
-    public Task(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
 
     public String getName() {
         return name;
