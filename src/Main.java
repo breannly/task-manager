@@ -1,5 +1,4 @@
-import controller.manager.HTTPTaskManager;
-import controller.utility.Managers;
+import server.HttpTaskServer;
 import server.KVServer;
 
 import java.io.IOException;
@@ -7,8 +6,9 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args)
-            throws IOException {
+            throws IOException, InterruptedException {
         new KVServer().start();
+        new HttpTaskServer().start();
     }
 }
 
