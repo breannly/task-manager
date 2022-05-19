@@ -10,9 +10,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class HttpTaskServer {
-    private static final int PORT = 8081;
+    private static final int PORT = 8080;
     private final TaskManager manager;
-    private  final Gson gson;
     private final HttpServer server;
 
     public HttpTaskServer() throws IOException, InterruptedException {
@@ -21,19 +20,18 @@ public class HttpTaskServer {
 
     public HttpTaskServer(TaskManager manager) throws IOException {
         this.manager = manager;
-        gson = Managers.getGson();
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/tasks", new HttpTaskHandler(manager));
     }
 
     public void start() {
         server.start();
-        System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+        System.out.println("\nHTTP-сервер запущен на " + PORT + " порту!");
     }
 
     public void stop() {
         server.stop(1);
-        System.out.println("HTTP-сервер приостановлен");
+        System.out.println("\nHTTP-сервер приостановлен");
     }
 }
 
